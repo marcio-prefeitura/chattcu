@@ -1,0 +1,128 @@
+{
+  "settings": {
+    "number_of_replicas": 2,
+    "number_of_shards": 1,
+    "index": {
+      "mapping": {
+        "coerce": false
+      },
+      "analysis": {
+        "filter": {
+          "brazilian_stemmer": {
+            "type": "stemmer",
+            "language": "brazilian"
+          }
+        },
+        "analyzer": {
+          "standard_lower_asciifolding_br_stemmer": {
+            "tokenizer": "standard",
+            "filter": ["lowercase", "asciifolding", "brazilian_stemmer"]
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "chat": {
+        "properties": {
+          "usuario": {
+            "type": "keyword"
+          },
+          "titulo": {
+            "type": "text",
+            "analyzer": "standard_lower_asciifolding_br_stemmer"
+          },
+          "data_criacao": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss"
+          },
+          "data_ultima_iteracao": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss"
+          },
+          "fixado": {
+            "type": "boolean"
+          },
+          "apagado": {
+            "type": "boolean"
+          }
+        }
+      },
+      "mensagens": {
+        "type": "nested",
+        "properties": {          
+          "codigo": {
+            "type": "keyword"
+          },
+          "papel": {
+            "type": "keyword"
+          },
+          "conteudo": {
+            "type": "text",
+            "analyzer": "standard_lower_asciifolding_br_stemmer"
+          },
+          "tipo_busca": {
+            "type": "keyword"
+          },
+          "arquivos_busca": {
+            "type": "text",
+            "analyzer": "standard_lower_asciifolding_br_stemmer"
+          },
+          "qtd_trechos_relevantes": {
+            "type": "integer"
+          },
+          "trechos": {
+            "type": "nested",
+            "properties": {              
+              "pagina_arquivo": {
+                "type": "keyword"
+              },
+              "tamanho_trecho": {
+                "type": "integer"
+              },
+              "search_score": {
+                "type": "float"
+              },
+              "conteudo": {
+                "type": "text",
+                "analyzer": "standard_lower_asciifolding_br_stemmer"
+              },
+              "id_registro": {
+                "type": "keyword"
+              }              
+            }
+          },
+          "data_envio": {
+            "type": "date",
+            "format": "yyyy-MM-dd HH:mm:ss"
+          },
+          "feedback": {
+            "properties": {
+                "reacao": {
+                    "type":"keyword"
+                },
+                "conteudo": {
+                    "type": "text",
+                    "analyzer": "standard_lower_asciifolding_br_stemmer"
+                },
+                "ofensivo": {
+                    "type": "boolean"
+                },
+                "inveridico": {
+                    "type": "boolean"
+                },
+                "nao_ajudou": {
+                    "type": "boolean"
+                }
+            }
+          },
+          "favoritado": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

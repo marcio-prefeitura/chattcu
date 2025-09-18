@@ -1,0 +1,122 @@
+@import 'src/components/sass/mixins';
+
+.trechomodal {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #FFF;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-radius: 8px;
+  max-width: 800px;
+  width: 100%;
+  gap: 1rem;
+
+  .App-dark & {
+    background-color: #202124;
+    color: #cecece;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__fechar{
+      font-size: 16px;
+      color: #101828;
+      .App-dark & {
+        color: #c4c7c5;
+      }
+    }
+  }
+
+  &__titulo {
+    font-size: 1.125rem !important;
+    font-weight: 400 !important;
+    line-height: 2rem !important;
+    letter-spacing: normal;
+    padding: 0 !important;
+    color: #000 !important;
+
+    .App-dark & {
+      color: #E3E3E3 !important;
+    }
+  }
+
+  &__box {
+    @include barra-de-rolagem;
+    padding: 0 !important;
+    overflow: auto;
+    overflow-y: auto;
+    max-height: 300px;
+
+    &--text {
+      font-size: .875rem !important;
+      font-weight: 400;
+      line-height: 1.25rem;
+      letter-spacing: normal;
+      color: #4F4F4F !important;
+    }
+  }
+
+  &__texto {
+    color: #4F4F4F !important;
+
+    .App-dark & {
+      color: #E3E3E3 !important;
+    }
+  }
+
+  &__linha {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+
+    & .icon-content_copy, .icon-check{
+      font-size: 16px;
+      color: #101828;
+      .App-dark & {
+        color: #c4c7c5;
+      }
+    }
+  }
+
+  &__link {
+    font-size: .8rem !important;
+    color: #1c519b !important;
+    font-weight: 500;
+    word-break: break-all;
+    cursor: pointer;
+
+    .App-dark & {
+      color: #a8c7fa !important;
+    }
+  }
+
+  &__label {
+    font-size: .8rem !important;
+  }
+
+
+  &__box-botao {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    &__botao {
+      border-color: #a7a7a7 !important;
+      color: #344054 !important;
+
+      .App-dark & {
+        color: #cecece !important;
+        border-color: #cecece !important;
+      }
+    }
+  }
+}

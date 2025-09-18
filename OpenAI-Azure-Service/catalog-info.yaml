@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  annotations:
+    backstage.io/kubernetes-deployment: openai-azure-backend-deploy
+    backstage.io/kubernetes-namespace: openai-azure
+    tcu/criado-por-script: 'true'
+  description: 'TODO: Add description. Component created by script.'
+  labels: {}
+  name: openai-azure-backend-deploy
+spec:
+  lifecycle: production
+  owner: group:sesin
+  type: service

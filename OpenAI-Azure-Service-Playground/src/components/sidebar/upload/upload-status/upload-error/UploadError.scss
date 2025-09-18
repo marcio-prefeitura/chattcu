@@ -1,0 +1,43 @@
+.upload-error {
+
+    &__content {
+        padding: .5rem;
+        background-color: #FFF;
+        border: 0.538px solid #C61010;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .App-dark & {
+            background-color: #171717 !important;
+            color: #ececec !important;
+        }
+    }
+
+    &__name {
+        color: #C61010;
+        text-align: left;
+        font-size: 12px !important;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        max-width: 212px;
+
+        .App-dark & {
+            color: #ececec !important;
+        }
+    }
+
+    &__msg-error {
+        color: #E63737;
+        font-size: 11px;
+        text-align: left;
+    }
+
+    .icon-x-circle {
+        color: #E63737;
+        cursor: pointer;
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "name": "openai-azure-service",
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.pylintPath": "/usr/local/bin/pylint",
+        "python.linting.pylintArgs": [
+          "--init-hook='import sys; sys.path.append(\"/usr/local/lib/python3.10/dist-packages\")'"
+        ],
+        "thunder-client.saveToWorkspace": true
+    },
+    "build": {
+      "dockerfile": "../Dockerfile.dev"
+    },
+    "runArgs": [
+      "--name", 
+      "openai-azure-service"
+    ],
+    "customizations": {
+      "vscode": {
+        "extensions": [
+            "ms-python.python",
+            "ms-python.vscode-pylance",
+            "rangav.vscode-thunder-client",
+            "ms-python.pylint"
+        ]
+      }
+    },
+    "forwardPorts": [
+      8000
+    ]
+  }
+  

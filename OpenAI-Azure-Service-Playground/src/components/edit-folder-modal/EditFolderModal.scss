@@ -1,0 +1,56 @@
+@import '../sass/mixins.scss';
+
+.edit-modal {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #FFF;
+  padding: 24px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-radius: 8px;
+  max-width: 544px;
+  width: 100%;
+  gap: 1rem;
+
+  &__textfield {
+    margin-left: 50px !important;
+  }
+
+  & .icon-edit {
+    font-size: 18px;
+    display: flex;
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 28px;
+    border: 8px solid #F9FAFB;
+    background: #F2F4F7;
+  }
+
+  &__titulo {
+    font-weight: 600 !important;
+    font-size: 18px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: start;
+    width: 100%;
+  }
+
+  &__botao {
+    gap: 8px;
+    display: flex;
+    justify-content: flex-end;
+
+    &--cancelar {
+      border-color: #a7a7a7 !important;
+      color: #344054 !important;
+    }
+  }
+}

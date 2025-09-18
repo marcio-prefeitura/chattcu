@@ -1,0 +1,153 @@
+.fullPage {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.not-found {
+    display: flex;
+    flex-flow: row wrap;
+    padding-bottom: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    color: #7e848c;
+    height: calc(100vh - 64px);
+}
+
+@media (min-width: 500px) and (max-width: 1300px) {
+    .not-found {
+        width: auto;
+        height: auto;
+    }
+}
+
+@media (max-width: 500px) {
+    .not-found {
+        width: auto;
+        height: auto;
+    }
+
+    .not-found__descricao h2 {
+        width: 80% !important;
+        margin-right: 50px;
+    }
+
+    .not-found__descricao p {
+        width: 80% !important;
+    }
+
+    .not-found__descricao h1 {
+        width: auto !important;
+    }
+
+    .fullPage {
+        justify-content: left !important;
+    }
+}
+
+.not-found__descricao {
+    flex-direction: column;
+    display: flex;
+}
+
+.not-found__descricao .mat-display-3 {
+    font-weight: 700;
+}
+
+.not-found__descricao .mat-headline {
+    font-weight: 700;
+}
+
+.mat-headline {
+    font-size: 24px !important;
+    line-height: 48px !important;
+}
+
+.not-found__descricao p {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    width: 436px;
+    padding-top: 6px;
+    padding-bottom: 12px;
+}
+
+.not-found__descricao a {
+    color: #1C519B;
+    text-decoration: unset;
+    text-transform: lowercase;
+}
+
+.not-found__descricao p:hover {
+    font-weight: unset !important;
+}
+
+.not-found__descricao h1:hover {
+    font-weight: 700 !important;
+}
+
+.not-found__descricao h1 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 80px;
+    line-height: 94px !important;
+    color: #7E848C;
+}
+
+.not-found__descricao h2 {
+    font-style: normal !important;
+    font-weight: 700 !important;
+    font-size: 24px !important;
+    line-height: 28px !important;
+    color: #ececec !important;
+    width: 420px;
+}
+
+.not-found__descricao h2:hover {
+    font-weight: 700 !important;
+}
+
+.not-found__button button {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    color: #FFFFFF;
+    text-transform: inherit;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 4px;
+    width: auto;
+    height: 44px;
+    background: #1C519B;
+    border-radius: 8px;
+}
+
+.bot-found__imagem div {
+    width: 627px !important;
+    height: 100% !important;
+    margin: 0px auto;
+    outline: none;
+    margin-left: -160px !important;
+}
+
+@media (max-width: 500px) {
+    .not-found .not-found__imagem {
+        width: auto;
+        flex-direction: column;
+        transform: rotateY(180deg);
+    }
+}
+
+.mais-info {
+    width: auto;
+    max-width: 700px;
+}
+
+.mais-info-p {
+    padding: 20px;
+}

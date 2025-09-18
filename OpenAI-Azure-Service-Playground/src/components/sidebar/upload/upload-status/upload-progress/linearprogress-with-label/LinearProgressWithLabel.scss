@@ -1,0 +1,42 @@
+.linear-progress-with-label {
+    &-container {
+        display: flex;
+        align-items: center;
+    }
+
+    &-container-progress {
+        flex: 1;
+        margin-right: 4px;
+    }
+
+    &-container-label {
+        color: #353535;
+        font-size: 12px !important;
+        line-height: 20px;
+    }
+}
+
+// .linear-progress-with-label-container {
+//     display: flex;
+//     align-items: center;
+// }
+
+// .linear-progress-with-label-container .linear-progress-with-label-container-progress {
+//     flex: 1;
+//     margin-right: 4px;
+// }
+
+// .linear-progress-with-label-container .linear-progress-with-label-container-label {
+//     min-width: 35px;
+// }
+
+.MuiLinearProgress-root {
+    height: 8px !important;
+    border-radius: 8px;
+    background-color: #F9F9F9 !important;
+}
+
+
+.MuiLinearProgress-bar {
+    border-radius: 8px !important;
+}

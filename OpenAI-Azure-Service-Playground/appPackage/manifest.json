@@ -1,0 +1,52 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.16",
+    "version": "${{TEAMS_APP_VERSION}}",
+    "id": "${{TEAMS_APP_ID}}",
+    "packageName": "com.microsoft.teams.extension",
+    "developer": {
+        "name": "Teams App, Inc.",
+        "websiteUrl": "${{TAB_ENDPOINT}}",
+        "privacyUrl": "${{TAB_ENDPOINT}}/index.html#/privacy",
+        "termsOfUseUrl": "${{TAB_ENDPOINT}}/index.html#/termsofuse"
+    },
+    "icons": {
+        "color": "chattcu-192x192.png",
+        "outline": "chattcu-32x32.png"
+    },
+    "name": {
+        "short": "${{TEAMS_APP_NAME_SHORT}}",
+        "full": "ChatTCU - Ferramenta de suporte baseada em Inteligência Artificial"
+    },
+    "description": {
+        "short": "ChatTCU - Assistente de redação baseado em Inteligência Artificial",
+        "full": "ChatTCU - Ferramenta de suporte baseada em Inteligência Artificial para auxílio no dia-a-dia"
+    },
+    "accentColor": "#FFFFFF",
+    "bots": [],
+    "composeExtensions": [],
+    "configurableTabs": [],
+    "staticTabs": [
+        {
+            "entityId": "index0",
+            "name": "Conversa",
+            "contentUrl": "${{TAB_ENDPOINT}}/",
+            "websiteUrl": "${{TAB_ENDPOINT}}/",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "${{TAB_DOMAIN}}"
+    ],
+    "webApplicationInfo": {
+        "id": "${{AAD_APP_CLIENT_ID}}",
+        "resource": "api://${{TAB_DOMAIN}}/${{AAD_APP_CLIENT_ID}}"
+    },
+    "showLoadingIndicator": false
+}

@@ -1,0 +1,132 @@
+.drag-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: .5rem;
+    padding: 20px;
+    // background: #FFF;
+    border-radius: 8px !important;
+
+    .App-dark & {
+        background-color: #212121;
+    }
+
+    & .icon-layers {
+        font-size: 18px;
+        color: #3A71C7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        @media screen and (max-width: 360px) {
+            font-size: 18px;
+            padding: 6px;
+        }
+
+        .App-dark & {
+            color: #88A6FF !important;
+        }
+    }
+
+    &__texto {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        @media screen and (max-width: 360px) {
+            align-items: flex-start;
+        }
+
+        &--titulo {
+            color: #353535;
+            font-size: 12px;
+            font-weight: 500;
+
+            .App-dark & {
+                color: #efecf4 !important;
+            }
+        }
+
+        &--informacao {
+            color: #676767;
+            font-size: 11px;
+            line-height: 18px;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+    }
+
+    &__button {
+        color: #1A1A1A;
+        font-size: 11px;
+        font-weight: 500;
+        display: flex;
+        height: 23px;
+        padding: 8px 12px;
+        align-items: center;
+        gap: 4px;
+        border-radius: 6px;
+        border: 1px solid #B9C1CC;
+
+        .App-dark & {
+            color: #cecece;
+        }
+    }
+
+    & p {
+        font-weight: 400 !important;
+        color: #a3a3a3 !important;
+    }
+
+    & .error {
+        font-size: 10px;
+        color: #e57878 !important;
+    }
+
+    & .success {
+        font-size: 10px;
+        color: #78e5d5 !important;
+    }
+
+    &__box-documentos {
+        display: flex;
+    }
+
+    &__botao-documentos {
+        padding: 0 1rem !important;
+        font-size: .8rem !important;
+        height: 36px;
+        text-transform: none !important;
+        white-space: nowrap !important;
+        background-color: #f3f6fc !important;
+        border: none !important;
+        border-radius: 20px !important;
+        margin: 1rem 0 0 0 !important;
+
+        & .fa {
+            font-size: 14px !important;
+        }
+    }
+
+    &.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+
+        .icon-layers,
+        &__texto--titulo,
+        &__texto--informacao,
+        &__button {
+            color: #a3a3a3 !important;
+            pointer-events: none;
+        }
+
+        &__button {
+            border-color: #d1d1d1;
+        }
+    }
+}

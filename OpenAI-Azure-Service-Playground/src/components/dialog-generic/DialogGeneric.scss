@@ -1,0 +1,122 @@
+.dialog {
+    overflow: hidden;
+
+    &__box-modal {
+        .App-dark & {
+
+            .css-1t1j96h-MuiPaper-root-MuiDialog-paper,
+            .css-uhb5lp {
+                background-color: unset !important;
+            }
+        }
+    }
+
+    &__titulo {
+        font-weight: 600 !important;
+        font-size: 18px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    &__icone-close {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        width: 100%;
+        gap: 12px;
+        align-items: flex-start;
+
+        & .icon-x{
+            .App-dark & {
+              color: #E3E3E3 !important;
+            }
+          }
+    }
+
+
+    &__subtitulo {
+        font-size: 14px !important;
+        line-height: 20px;
+        color: #475467 !important;
+        padding: 0 !important;
+
+        .App-dark & {
+            color: #CCC !important;
+        }
+    }
+
+    &__box-icone-texto {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 24px;
+        justify-content: center;
+        align-items: center;
+
+        .App-dark & {
+            color: #E3E3E3;
+            background-color: #202124;
+            border-radius: 12px;
+        }
+
+        & .icon-trash {
+            font-size: 18px;
+            display: flex;
+            width: 48px;
+            height: 48px;
+            padding: 12px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 28px;
+            background: #F2F4F7;
+
+            .App-dark & {
+                background-color: #171717;
+                color: #88A6FF;
+            }
+        }
+    }
+
+    &__texto {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        gap: 4px;
+    }
+
+    &__box {
+        padding: 0 !important;
+
+        &--text {
+            font-size: 14px !important;
+            line-height: 20px;
+            color: #475467 !important;
+            padding: 0 !important;
+        }
+    }
+
+    &__botao {
+        width: 100%;
+        justify-content: flex-end;
+        gap: 8px;
+        display: flex;
+
+        & button{
+            text-transform: unset !important;
+            & span{
+            text-transform: unset !important;
+            }
+          }
+
+        &--cancelar {
+            border-color: #a7a7a7 !important;
+            color: #344054 !important;
+
+            .App-dark & {
+                color: #cecece !important;
+                border-color: #cecece !important;
+                text-transform: unset !important;
+            }
+        }
+    }
+}

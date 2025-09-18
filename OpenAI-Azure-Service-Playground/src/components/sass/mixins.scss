@@ -1,0 +1,121 @@
+@mixin botao-confirmar-cancelar($radius, $btn-primaria, $btn-secundaria) {
+
+    //btn-primaria é a cor padrão do botão confirmar btn-secundária é a cor padrão do cancelar
+    &--confirmar {
+        background-color: $btn-primaria !important;
+        border: 1px $btn-secundaria !important;
+        border-radius: $radius !important;
+        color: $btn-secundaria !important;
+        margin-right: 15px;
+        padding: 10px 20px !important;
+    }
+
+    &--cancelar {
+        background-color: $btn-secundaria !important;
+        border: 1px solid $btn-primaria !important;
+        border-radius: $radius !important;
+        color: $btn-primaria !important;
+        margin-right: 5px !important;
+        padding: 10px 20px !important;
+    }
+}
+
+@mixin botao-cancelar($radius, $btn-secundaria) {
+    //btn-secundária é a cor padrão do cancelar
+
+    &--cancelar {
+        background-color: $btn-secundaria !important;
+        border: 1px solid $btn-primaria !important;
+        border-radius: $radius !important;
+        color: $btn-primaria !important;
+        margin-right: 5px !important;
+        padding: 10px 20px !important;
+    }
+}
+
+@mixin botao-confirmar($radius, $btn-primaria) {
+
+    //btn-primaria é a cor padrão do botão confirmar
+    &--confirmar {
+        background-color: $btn-primaria !important;
+        border: 1px $btn-secundaria !important;
+        border-radius: $radius !important;
+        color: $btn-secundaria !important;
+        margin-right: 15px;
+        padding: 10px 20px !important;
+    }
+}
+
+@mixin barra-de-rolagem {
+
+    // Mixin para estilizar a barra de rolagem
+    &::-webkit-scrollbar {
+        width: 8px; // Largura padrão da barra de rolagem
+        height: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 20px; // Raio padrão da borda da barra de rolagem
+        background: #c2c2c2; // Cor padrão da barra de rolagem
+        border: 3px solid transparent;
+        height: 1rem;
+
+        // Efeito de hover
+        &:hover {
+            background-color: darken(#c2c2c2, 20%);
+        }
+    }
+}
+
+// Mixin para estilizar o tamanho do box no teams
+@mixin inteams {
+        @media screen and (max-width: 430px) {
+            height: calc(100vh - 66px) !important;
+        }
+}
+
+// Mixin para estilizar o tamanho do box no teams
+@mixin inteams-upload {
+    @media screen and (max-width: 430px) {
+        height: calc(100vh - 132px) !important;
+    }
+}
+
+//Mixin Dark Mode
+@mixin dark-mode($bg-color: null, $text-color: null, $border-color: null, $border-width: null) {
+    .App-dark & {
+        @if $bg-color {
+            background-color: $bg-color !important;
+        }
+
+        @if $text-color {
+            color: $text-color !important;
+        }
+
+        @if $border-color and $border-width {
+            border: $border-width solid $border-color;
+        }
+    }
+}
+
+//Mixin Input Estilizado
+
+@mixin input-estilizado {
+
+    /* Estilo para remover a borda do TextField outlined quando não estiver focado */
+    .MuiOutlinedInput-root:not(.Mui-focused) .MuiOutlinedInput-notchedOutline {
+        border: none !important;
+    }
+
+    /* Estilo para adicionar a borda ao passar o mouse */
+    .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+        border: 1px solid #a0a0a0 !important;
+        /* ou outra cor de borda desejada */
+    }
+
+    /* Estilo para adicionar a borda quando estiver focado */
+    .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+        border: 1.5px solid #3f51b5 !important;
+        /* Cor azul padrão do Material-UI para borda em foco */
+    }
+}

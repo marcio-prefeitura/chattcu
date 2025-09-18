@@ -1,0 +1,111 @@
+.App {
+  text-align: center;
+  overflow: hidden;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.MuiTypography-root {
+  font-family: system-ui, sans-serif !important;
+}
+
+//Deixa o botão hover em dark mode em toda a plataforma
+.MuiIconButton-root:hover{
+  .App-dark & {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+//Deixa o Menu Item em dark mode em toda a plataforma
+.MuiMenu-paper {
+  .App-dark & {
+    background-color: #2F2F2F !important;
+    color: #FFF;
+  }
+}
+
+.Mui-selected {
+  .App-dark & {
+    background-color: #424242 !important;
+  }
+}
+
+.MuiMenuItem-root:hover {
+  .App-dark & {
+    background-color: #6b6b6b !important;
+  }
+}
+
+.MuiListItemButton-root:hover {
+  .App-dark & {
+    background-color: #6b6b6b !important;
+  }
+}
+
+
+@media print {
+
+  /*Escondendo objetos que não devem aparecer na impressão*/
+  nav,
+  footer,
+  video,
+  audio,
+  object,
+  embed,
+  .chat-box__bloco-input,
+  .sidebar,
+  .chat-box__botao-rolagem,
+  .toolbar,
+  .message-item__icones-texto,
+  .highlighter__icon {
+    display: none !important;
+  }
+
+  //ajuste de conteúdo pra ser exibido na impressão
+  body,
+  .chat-box__container,
+  .chat-box {
+    height: auto !important;
+    overflow: visible !important
+  }
+
+  /*Personalizando links*/
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+}

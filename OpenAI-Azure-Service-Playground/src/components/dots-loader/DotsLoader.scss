@@ -1,0 +1,43 @@
+.bouncing-loader {
+	display: flex;
+	justify-content: left;
+	padding: 0px;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+	margin-top: 12px;
+}
+
+.bouncing-loader>div {
+	width: 7px;
+	height: 7px;
+	margin: 3px 4px;
+	border-radius: 50%;
+	background-color: #000;
+	opacity: 1;
+	animation: bouncing-loader 0.6s infinite alternate;
+
+	.App-dark & {
+		background-color: #efecf4;
+	}
+}
+
+.modificador{
+	border: none !important;
+	padding: 0px !important;
+	background-color: transparent !important;
+}
+
+@keyframes bouncing-loader {
+	to {
+		opacity: 0.1;
+		transform: translateY(-16px);
+	}
+}
+
+.bouncing-loader>div:nth-child(2) {
+	animation-delay: 0.3s;
+}
+
+.bouncing-loader>div:nth-child(3) {
+	animation-delay: 0.4s;
+}

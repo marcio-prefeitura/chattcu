@@ -1,0 +1,304 @@
+import io
+from unittest.mock import AsyncMock, MagicMock, Mock, patch
+
+import pydub
+import pytest
+from fastapi import UploadFile
+
+from src.service import gabi_service
+from tests.util.mock_objects import MockObjects
+
+
+class FakeAudioSegment:
+    def __init__(self, duration_ms, chunk_data=None):
+        self.duration_ms = duration_ms
+        self.chunk_data = chunk_data or b"fake_mp3_data"
+
+    # Simula o comportamento de len(audio)
+    def __len__(self):
+        return self.duration_ms
+
+    # Simula o slicing de audio[i:i+chunk_size]
+    def __getitem__(self, slice_range):
+        return FakeAudioSegment(slice_range.stop - slice_range.start, self.chunk_data)
+
+    # Simula o método export do AudioSegment
+    def export(self, buf, format):
+        buf.write(self.chunk_data)
+
+
+class TestGabiService:
+    # save_response_in_blob
+    @patch(
+        "src.service.gabi_service.upload_content",
+        new_callable=AsyncMock,
+        side_effect=Exception("teste"),
+    )
+    @pytest.mark.asyncio
+    async def test_deve_retornar_vazio_ao_salvar_responses_com_exception(
+        self, mock_upload_content
+    ):
+        saida = await gabi_service.save_responses_in_blob(
+            container="teste",
+            content=[("teste", "teste")],
+            original_blob_name="teste",
+        )
+
+        # Verifica se a função mockada foi chamada
+        mock_upload_content.assert_called_once()
+        assert saida == []
+
+    @patch(
+        "src.service.gabi_service.AzureBlob.upload_blob",
+        new_callable=AsyncMock,
+        side_effect=Exception("teste"),
+    )
+    @pytest.mark.asyncio
+    async def test_deve_retornar_lista_com_string_vazia_ao_salvar_blob_exception(
+        self, mock_upload_content
+    ):
+        saida = await gabi_service.save_responses_in_blob(
+            container="teste",
+            content=[("teste", "teste")],
+            original_blob_name="teste.mp3",
+        )
+
+        # Verifica se a função mockada foi chamada
+        mock_upload_content.assert_called_once()
+        assert saida == [""]
+
+    @patch("src.service.gabi_service.AzureBlob.upload_blob", new_callable=AsyncMock)
+    @pytest.mark.asyncio
+    async def test_salvar_resposta_no_blob(self, mock_upload_content):
+        saida = await gabi_service.save_responses_in_blob(
+            container="teste",
+            content=[("teste", "teste")],
+            original_blob_name="teste.mp3",
+        )
+
+        # Verifica se a função mockada foi chamada
+        mock_upload_content.assert_called_once()
+        assert saida == ["teste-teste.txt"]
+
+    # process_audio
+    # @patch(
+    #     "src.service.gabi_service.extract_audio_from_stream",
+    #     new_callable=AsyncMock,
+    #     side_effect=Exception("teste"),
+    # )
+    # @pytest.mark.asyncio
+    # async def test_deve_retornar_erro_ao_extrair_audio(
+    #     self, mock_extract_audio, mocker
+    # ):
+    #     mocks = MockObjects()
+
+    #     saida, msg = await gabi_service.process_audio(
+    #         language="pt",
+    #         original_blob_name="teste.mp3",
+    #         token=mocks.mock_token_usr,
+    #         mongo_registry=mocks.mock_item_sistema,
+    #         azure_blob_instance=mocker.AsyncMock(),
+    #         stream=b"This is a mock byte string",
+    #     )
+
+    #     # Verifica se a função mockada foi chamada
+    #     mock_extract_audio.assert_called_once()
+    #     assert saida == ()
+    #     assert msg == "Erro ao enviar o áudio para a memória: teste."
+
+    @patch(
+        "src.service.gabi_service.create_audio_chunks",
+        new_callable=AsyncMock,
+        return_value=None,
+    )
+    @pytest.mark.asyncio
+    async def test_deve_retornar_erro_ao_criar_audio_chunk(
+        self, mock_create_audio_chunks, mocker, decoded_token
+    ):
+        mocks = MockObjects()
+
+        saida, msg = await gabi_service.process_audio(
+            language="pt",
+            original_blob_name="teste.mp3",
+            token=decoded_token,
+            mongo_registry=mocks.mock_item_sistema,
+            azure_blob_instance=mocker.AsyncMock(),
+            stream=b"This is a mock byte string",
+        )
+
+        # Verifica se a função mockada foi chamada
+        mock_create_audio_chunks.assert_called_once()
+        assert saida == ()
+        assert msg == "Nenhum conteúdo de áudio encontrado."
+
+    @patch("src.service.gabi_service.create_audio_chunks", new_callable=AsyncMock)
+    @patch(
+        "src.service.gabi_service.transcribe_from_memory_to_text",
+        new_callable=AsyncMock,
+        side_effect=Exception("teste"),
+    )
+    @pytest.mark.asyncio
+    async def test_deve_retornar_erro_ao_transcrever(
+        self, mock_create_audio_chunks, mocker, decoded_token
+    ):
+        mocks = MockObjects()
+
+        saida, msg = await gabi_service.process_audio(
+            language="pt",
+            original_blob_name="teste.mp3",
+            token=decoded_token,
+            mongo_registry=mocks.mock_item_sistema,
+            azure_blob_instance=mocker.AsyncMock(),
+            stream=b"This is a mock byte string",
+        )
+
+        # Verifica se a função mockada foi chamada
+        mock_create_audio_chunks.assert_called_once()
+        assert saida == ()
+        assert msg == "Erro ao transcrever o áudio para texto: teste."
+
+    # @patch("src.service.gabi_service.pydub.AudioSegment.from_file", new_callable=Mock)
+    # @patch("src.service.gabi_service.pydub.AudioSegment.export", new_callable=Mock)
+    # @pytest.mark.asyncio
+    # async def test_create_audio_chunks(self, mock_from_file):
+    #     # Duração total do áudio em milissegundos (por exemplo, 3000ms = 3 segundos)
+    #     duration_ms = 1000 * 60 * 30  # 30 min
+
+    #     fake_audio_segment = FakeAudioSegment(duration_ms=duration_ms)
+
+    #     mock_from_file.return_value = fake_audio_segment
+
+    #     mock_entrada = UploadFile(file=io.BytesIO(b"teste"), filename="teste.mp3")
+
+    #     # Testando o método create_audio_chunks com o áudio mockado
+    #     chunks = await gabi_service.create_audio_chunks(mock_entrada)
+
+    #     # Verificar a estrutura de chunks retornados
+    #     assert len(chunks) == 2
+    #     assert "chunk_1" in chunks
+    #     assert chunks["chunk_1"]["data"] == b"fake_mp3_data"
+    #     assert chunks["chunk_1"]["size_bytes"] == len(b"fake_mp3_data")
+    #     assert (
+    #         chunks["chunk_1"]["chunk_duration_s"]
+    #         == gabi_service.CHUNK_AUDIO_SIZE_MS / 1000
+    #     )
+
+    # @patch(
+    #     "src.service.gabi_service.LLMChain.apredict",
+    #     new_callable=AsyncMock,
+    #     return_value="teste",
+    # )
+    # @pytest.mark.asyncio
+    # async def test_create_summary_geral(self, mock_apredict, decoded_token):
+    #     saida = await gabi_service.create_summary(
+    #         total_transcript="teste", token=decoded_token, tipo_conteudo="geral"
+    #     )
+
+    #     # mock_get_model.assert_called()
+    #     mock_apredict.assert_called()
+    #     assert saida == ("geral", "teste\n\n\n\n")
+
+    # @patch(
+    #     "src.service.gabi_service.ModelFactory.get_generic_azure_openai_model",
+    #     new_callable=Mock,
+    # )
+    # @patch(
+    #     "src.service.gabi_service.LLMChain.apredict",
+    #     new_callable=AsyncMock,
+    #     return_value="teste",
+    # )
+    # @pytest.mark.asyncio
+    # async def test_create_summary_reuniao(
+    #     self, mock_apredict, mock_get_generic_model, mocker, decoded_token
+    # ):
+    #     mock_response = MagicMock()
+    #     mock_response.choices = [MagicMock()]
+    #     mock_response.choices[0].message.function_call.arguments = (
+    #         '{"participants": [{"name": "teste", "position": "teste"}]}'
+    #     )
+
+    #     mock_create = mocker.AsyncMock(return_value=mock_response)
+
+    #     mock_get_generic_model.return_value.chat.completions.create = mock_create
+
+    #     saida = await gabi_service.create_summary(
+    #         total_transcript="teste",
+    #         token=decoded_token,
+    #         tipo_conteudo="reuniao",
+    #     )
+
+    #     # mock_get_model.assert_called()
+    #     mock_get_generic_model.assert_called()
+    #     mock_create.assert_called()
+    #     mock_apredict.assert_called()
+    #     assert saida == (
+    #         "reuniao",
+    #         "#### Participantes\n"
+    #         "Nome: teste, Cargo/Função: teste\n"
+    #         "\n"
+    #         "\n"
+    #         "\n"
+    #         "\n"
+    #         "\n"
+    #         "\n"
+    #         "teste\n"
+    #         "\n"
+    #         "\n"
+    #         "\n"
+    #         "\n"
+    #         "\n"
+    #         "teste\n"
+    #         "\n"
+    #         "\n"
+    #         "\n",
+    #     )
+
+    # # @patch(
+    # #     "src.service.gabi_service.pydub.AudioSegment.from_file",
+    # #     new_callable=Mock,
+    # #     spec=pydub.AudioSegment,
+    # # )
+    # @patch(
+    #     "src.service.gabi_service.pydub.AudioSegment.from_file"
+    # )
+    # @patch('src.service.gabi_service.pydub.AudioSegment.export', wraps=pydub.AudioSegment.export)
+    # @patch("src.service.gabi_service.ModelFactory.get_model", new_callable=Mock)
+    # @patch("src.service.gabi_service.LLMChain.apredict", new_callable=AsyncMock)
+    # # @patch("src.service.gabi_service.AzureBlob.upload_blob", new_callable=AsyncMock)
+    # @pytest.mark.asyncio
+    # async def test_process_audio(
+    #     self,
+    #     mock_llmchain_apredict,
+    #     mock_model_factory,
+    #     spy_export,
+    #     mock_from_file,
+    #     mocker,
+    # ):
+    #     mocks = MockObjects()
+    #     mock_create_transcription = mocker.AsyncMock(return_value="teste")
+
+    #     mock_model_factory.return_value.audio.return_value.transcriptions.return_value.create = mock_create_transcription
+
+    #     # Criando um mock para o AudioSegment
+    #     mock_audio_segment = MagicMock(spec=pydub.AudioSegment)
+
+    #     # Configurando o retorno do mock do from_file
+    #     mock_from_file.side_effect = [mock_audio_segment, mock_audio_segment]
+
+    #     # Adicionando um comportamento de len ao mock_audio_segment
+    #     mock_audio_segment.__len__.return_value = 1000  # Exemplo de duração em milissegundos
+
+    #     saida = await gabi_service.process_audio(
+    #         language="pt",
+    #         original_blob_name="teste.mp3",
+    #         token=mocks.mock_token_usr,
+    #         mongo_registry=mocks.mock_item_sistema,
+    #         azure_blob_instance=mocker.AsyncMock(),
+    #         stream=b"This is a mock byte string",
+    #     )
+
+    #     mock_from_file.assert_called()
+    #     spy_export.assert_called()
+    #     mock_model_factory.assert_called_once()
+    #     mock_llmchain_apredict.assert_called_once()
+    #     mock_create_transcription.assert_called()

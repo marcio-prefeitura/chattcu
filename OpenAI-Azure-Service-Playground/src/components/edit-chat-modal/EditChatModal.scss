@@ -1,0 +1,121 @@
+@import '../sass/mixins.scss';
+
+.edit-modal {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #FFF;
+  padding: 24px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-radius: 8px;
+  max-width: 544px;
+  width: 100%;
+  gap: 1rem;
+
+  .App-dark & {
+    background-color: #202124;
+    color: #efecf4;
+  }
+
+  &__titulo {
+    font-weight: 600 !important;
+    font-size: 18px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: start;
+    width: 100%;
+  }
+
+  &__icone-close {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    width: 100%;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .MuiOutlinedInput-input {
+    .App-dark & {
+      background-color: #171717 !important;
+      color: #efecf4;
+    }
+  }
+
+  /* Estilo para remover a borda do TextField outlined quando não estiver focado */
+  & .MuiOutlinedInput-root:not(.Mui-focused) .MuiOutlinedInput-notchedOutline {
+
+    .App-dark & {
+      border: 1px solid #6d6d6d !important;
+    }
+  }
+
+  /* Estilo para adicionar a borda ao passar o mouse */
+  & .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    .App-dark & {
+      border: 1px solid #3f51b5 !important;
+    }
+  }
+
+  /* Estilo para adicionar a borda quando estiver focado */
+  & .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    .App-dark & {
+      border: 2px solid #3f51b5 !important;
+    }
+  }
+
+  &__textfield {
+    margin-left: 50px !important;
+  }
+
+  & .icon-edit {
+    font-size: 18px;
+    display: flex;
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 28px;
+    border: 8px solid #F9FAFB;
+    background: #F2F4F7;
+
+    .App-dark & {
+      background-color: #171717;
+      border: 8px solid #171717;
+      color: #88A6FF;
+    }
+  }
+
+  &__botao {
+    gap: 8px;
+    display: flex;
+    justify-content: flex-end;
+
+    &--confirmar{
+      text-transform: unset !important;
+
+      &:disabled {        
+        .App-dark & {
+          background-color: #2E3237 !important;
+          color: #ffffff4d;
+        }
+      }
+    }
+
+    &--cancelar {
+      text-transform: unset !important;
+      border-color: #a7a7a7 !important;
+      color: #344054 !important;
+
+      .App-dark & {
+        color: #efecf4 !important;
+        border-color: #efecf4 !important;
+      }
+    }
+  }
+}

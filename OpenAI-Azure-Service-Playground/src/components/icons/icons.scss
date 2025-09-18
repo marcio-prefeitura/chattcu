@@ -1,0 +1,12 @@
+.folder,
+.folderIcon {
+    .material-symbols-rounded {
+        font-size: 22px;
+        color: #3A71C7 !important;
+        margin: 6px 6px 0 0 !important;
+
+        .App-dark & {
+            color: #88A6FF !important;
+        }
+    }
+}

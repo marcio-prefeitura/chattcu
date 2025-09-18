@@ -1,0 +1,21 @@
+.dropzone {
+    justify-content: center;
+    display: flex;
+    border-radius: 8px;
+    border: 1px dashed #B6B6B7;
+    background-color: #FFF !important;
+    cursor: pointer;
+
+    .App-dark & {
+        border: 1px dashed #e3e3e3 !important;
+        background: transparent !important;
+    }
+
+    &.dragActive {
+        border-color: #4557fc !important;
+    }
+
+    &.dragReject {
+        border-color: #C61010 !important;
+    }
+}

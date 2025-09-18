@@ -1,0 +1,778 @@
+@import '../sass/mixins.scss';
+
+.chat-box {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 66px);
+    margin: 0 auto;
+    overflow-y: visible !important;
+
+    @media screen and (max-width: 1440px) {
+        width: 100%;
+        margin: 0;
+    }
+
+    & .toolbar-ajuste {
+        display: none;
+
+        @media screen and (min-width: 900px) {
+            display: none;
+        }
+    }
+
+    .App-dark & {
+        background-color: #212121 !important;
+
+        @media screen and (max-width: 500px) and (max-height: 916px) {
+            padding: 0;
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        padding-top: 0px;
+    }
+
+    /* Altura padrão para todos os casos */
+    @media (max-width: 430px) {
+        height: calc(100vh - 170px);
+    }
+
+    /* Ajuste para dispositivos com entalhe */
+    @supports (env(safe-area-inset-bottom)) {
+        @media (max-width: 430px) {
+            height: calc(100vh - 0px - env(safe-area-inset-bottom));
+        }
+    }
+
+    &__teams {
+        padding: 0 !important;
+
+        @media screen and (min-width: 900px) {
+            padding-top: 1rem !important;
+        }
+
+        .panel__img-logo {
+            @media screen and (max-width: 500px) {
+                margin-top: 0;
+            }
+        }
+
+        .toolbar-ajuste {
+            display: none;
+        }
+
+        @include inteams;
+    }
+
+    &__scroll {
+        height: 100%;
+        overflow-y: auto;
+        width: 100%;
+        @include barra-de-rolagem;
+    }
+
+    &__button-select-style {
+        &.MuiButton-root {
+            text-transform: none;
+            color: #2d2d2f;
+            font-weight: 500 !important;
+            background-color: #fff;
+            border: 1px solid #949495;
+            border-radius: 8px;
+            box-shadow: none;
+            font-size: 12px;
+            height: 30px;
+            min-width: auto;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+
+            .icon-share {
+                margin-right: 4px;
+                font-size: 15px;
+                color: #1a1a1a;
+            }
+
+            &:hover {
+                background-color: #f8f9fa;
+                border-color: #d0d0d0;
+            }
+
+            .App-dark & {
+                background-color: #2f2f2f;
+                color: #e3e3e3;
+                border: 1px solid #ccc;
+
+                .icon-share {
+                    color: #e3e3e3;
+                }
+
+                &:hover {
+                    background-color: #3f3f3f;
+                }
+            }
+        }
+    }
+
+    &__icones {
+        display: flex;
+        align-items: center;
+    }
+
+    &__container {
+        padding: 0 32px;
+        padding-top: 12px;
+        margin: 0 auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        max-width: 850px;
+
+        @media screen and (max-width: 900px) {
+            padding-bottom: 0px;
+        }
+
+        @media screen and (max-width: 512px) {
+            padding: 0 12px;
+        }
+    }
+
+    &__divisor {
+        background: -webkit-radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.2), transparent) bottom;
+        background: radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.2), transparent) bottom;
+        bottom: 0;
+        margin-top: -4px;
+        padding-top: 4px;
+        display: block;
+
+        @media screen and (max-width: 1920px) {
+            width: 65%;
+            margin: 0 auto;
+        }
+
+        @media screen and (max-width: 1680px) {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        &.oculto {
+            display: none;
+        }
+
+        .App-dark & {
+            background: -webkit-radial-gradient(50% 100%, farthest-side, #ececec, transparent) bottom;
+            background: radial-gradient(farthest-side at 50% 100%, #ececec, transparent) bottom;
+        }
+    }
+
+    &__botao-rolagem {
+        bottom: 17vh !important;
+        right: 6vh !important;
+        position: fixed !important;
+        color: #1565c0 !important;
+        z-index: 9 !important;
+        background-color: #f1f5fa !important;
+        box-shadow: none !important;
+
+        &:hover {
+            background-color: #90caf9 !important;
+            color: #88a6ff !important;
+        }
+
+        &.oculto {
+            display: none;
+        }
+
+        @media screen and (max-width: 426px) {
+            right: 1vh !important;
+        }
+
+        @media screen and (min-width: 1620px) and (max-width: 1920px) {
+            right: 28vh !important;
+            bottom: 15vh !important;
+        }
+
+        .App-dark & {
+            background-color: #2a485b !important;
+            color: #cecece !important;
+        }
+    }
+
+    &__bloco-input {
+        padding: 16px 32px 0 16px;
+        margin-top: auto;
+        position: relative;
+        max-width: 850px;
+        width: 100%;
+        -webkit-align-self: center;
+        -ms-flex-item-align: center;
+        align-self: center;
+
+        &-agente {
+            width: 236px !important;
+            //padding: 16px 24px;
+            border-radius: 6px;
+            background: #fff;
+            box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.16);
+            margin-left: 50px;
+            display: flex;
+            flex-direction: column;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            position: absolute;
+            bottom: 90px;
+            z-index: 999;
+
+            @media screen and (max-width: 500px) {
+                width: 80vw !important;
+            }
+
+            .App-dark & {
+                background-color: #2f2f2f !important;
+            }
+
+            &:empty {
+                display: none !important;
+            }
+
+            & li {
+                //gap: 4px !important;
+                flex-direction: row;
+                display: flex;
+                justify-content: center;
+                align-content: flex-start;
+                flex-wrap: wrap;
+                margin-top: 4px !important;
+
+                &:last-child {
+                    & .menu-aling-box-divisor {
+                        display: none !important;
+                    }
+                }
+            }
+
+            &-lista {
+                &-item {
+                    padding: 8px !important;
+                    padding-left: 12px !important;
+                    padding-right: 12px !important;
+                    min-height: 0px !important;
+                    height: 40px;
+                    gap: 12px !important;
+
+                    .App-dark & {
+                        color: #cecece !important;
+                    }
+
+                    &-icone {
+                        display: flex;
+                        width: 30px;
+                        height: 30px;
+                        background-color: #fff !important;
+                        border-radius: 60px;
+                        align-items: center;
+                        justify-content: center;
+                        border: 1px solid #949495;
+                        color: #49494b;
+                        min-width: unset !important;
+
+                        .App-dark & {
+                            color: #cecece !important;
+                            background-color: #212121 !important;
+                        }
+                    }
+
+                    &-nome > span {
+                        font-size: 14px !important;
+
+                        .Mui-selected & {
+                            font-weight: 700 !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            padding: 12px 12px 12px 0;
+        }
+    }
+
+    &__botao-desarquivar {
+        align-self: center;
+        padding: 0px 12px 16px 12px;
+        width: 100%;
+
+        &-button {
+            height: 40px !important;
+            text-transform: unset !important;
+
+            .icon-unarchive {
+                font-size: 16px !important;
+            }
+        }
+    }
+
+    &__shared-actions {
+        align-self: center;
+        padding: 0 12px 16px;
+        width: 100%;
+
+        &__botao-fechar {
+            margin-right: 8px !important;
+            text-transform: unset !important;
+        }
+
+        &__botao-ir-para-o-chat {
+            text-transform: unset !important;
+        }
+    }
+
+    &__contador-especialista {
+        display: flex;
+        flex-direction: row;
+        margin-right: -10px;
+        align-content: flex-start;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        @media screen and (max-width: 500px) {
+            flex-direction: column;
+        }
+    }
+
+    &__especialista {
+        padding-bottom: 4px !important;
+        cursor: pointer;
+
+        @media screen and (max-width: 574px) {
+            margin: 0px auto !important;
+            padding-top: 0px !important;
+        }
+
+        .App-dark & {
+            background-color: unset !important;
+        }
+
+        &-chip {
+            background-color: #f1f5fa !important;
+            padding: 12px 8px !important;
+            margin-bottom: 8px !important;
+            border-radius: 8px !important;
+            border: 1px solid #3a71c7 !important;
+
+            &:hover {
+                background-color: #f4f4f4 !important;
+            }
+
+            .App-dark & {
+                color: #88a6ff !important;
+                background-color: #212428 !important;
+            }
+
+            & > span {
+                padding-left: 8px !important;
+                padding-right: 8px !important;
+                font-size: 12px;
+                font-weight: 500;
+                color: #3a71c7;
+
+                .App-dark & {
+                    color: #cecece;
+                }
+            }
+
+            span.MuiChip-avatar {
+                color: #3a71c7 !important;
+                font-size: 18px;
+                width: 18px;
+                display: flex;
+                align-items: center;
+                padding: 0 !important;
+                margin: 0 !important;
+
+                .App-dark & {
+                    color: #88a6ff !important;
+                }
+            }
+
+            & :nth-child(3) {
+                color: #3a71c7 !important;
+
+                .App-dark & {
+                    color: #88a6ff !important;
+                }
+            }
+
+            & > svg {
+                font-size: 12px !important;
+                margin: 0 !important;
+                border-radius: 50% !important;
+
+                & > g {
+                    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.43) !important;
+                }
+            }
+        }
+    }
+
+    &__botao-continuar-conversa {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    &__contador {
+        color: #717172;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: normal;
+
+        & .contador-label {
+            font-weight: unset;
+            padding-right: 6px;
+
+            @media screen and (max-width: 427px) {
+                display: none !important;
+            }
+        }
+
+        @media screen and (max-width: 390px) {
+            width: auto !important;
+        }
+
+        @media screen and (max-width: 670px) {
+            margin: 0 3rem 0 1rem;
+        }
+
+        @media screen and (max-width: 460px) {
+            margin: 0 52px 0 0;
+        }
+
+        & span {
+            font-weight: 500;
+            color: #767676;
+
+            .App-dark & {
+                color: #7e848c !important;
+            }
+        }
+
+        .App-dark & {
+            color: #7e848c !important;
+        }
+    }
+
+    &__message {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+
+        @media screen and (max-width: 670px) {
+            margin: 0 0 0 0.4rem;
+            gap: 2px;
+        }
+
+        &__botao-stop {
+            background-color: #f1f5fa !important;
+
+            .App-dark & {
+                background-color: #2f2f2f !important;
+            }
+
+            & .icon-pause {
+                color: #1a1a1a !important;
+                font-size: 16px;
+
+                .App-dark & {
+                    color: #88a6ff !important;
+                }
+            }
+        }
+    }
+
+    &__mensagem-atencao {
+        color: #767676;
+        text-align: center;
+        font-size: 12px;
+        line-height: normal;
+        padding: 0.5rem 0;
+    }
+
+    &__icon-input {
+        overflow: hidden;
+        display: flex;
+    }
+
+    &__icon-file {
+        display: flex;
+        flex-direction: row;
+        align-content: flex-start;
+        max-width: 40px;
+
+        .icon-paper-clip {
+            font-size: 18px;
+            color: #1a1a1a;
+
+            .App-dark & {
+                color: #ececec;
+            }
+        }
+
+        .Mui-disabled .icon-paper-clip {
+            color: #b0b0b0;
+        }
+    }
+
+    & .active-icon {
+        color: #0b57d0 !important;
+
+        .App-dark & {
+            color: #88a6ff;
+        }
+    }
+
+    .icon-image {
+        font-size: 20px;
+    }
+
+    & .icon-mic {
+        font-size: 20px;
+        color: #1a1a1a;
+
+        .App-dark & {
+            color: #ececec;
+        }
+    }
+
+    .Mui-disabled .icon-mic:before {
+        color: #b0b0b0;
+    }
+
+    &__botao-enviar {
+        .icon-send {
+            font-size: 18px;
+            color: #b0b0b0;
+        }
+    }
+
+    &.chat-blocked {
+        gap: 6px;
+
+        .icon-alert-circle {
+            margin-right: 1px;
+        }
+
+        .chat-box__dica-link {
+            margin: 0 4px;
+        }
+    }
+
+    &__dica-link {
+        cursor: pointer;
+        color: #1565c0;
+        text-decoration: underline;
+        margin: '0 4px';
+    }
+
+    &__custom-textfield {
+        @include input-estilizado;
+
+        .MuiOutlinedInput-root {
+            border-radius: 8px !important;
+            background-color: #fefefe !important;
+            border: 1px solid #949495;
+            color: #49494b;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 0;
+
+            .App-dark & {
+                background-color: #2f2f2f !important;
+            }
+
+            & > textarea {
+                //desabilita zoom automático no input (textarea)
+                touch-action: none !important;
+                padding: 1rem 1rem 0 1rem;
+                box-sizing: border-box;
+
+                @media screen and (max-width: 415px) {
+                    font-size: 16px !important;
+                }
+
+                @include barra-de-rolagem;
+
+                &::placeholder {
+                    font-size: 0.85rem !important;
+                }
+
+                //desabilita o zoom automático para outros estados do input
+                &:active,
+                ::after,
+                :focus,
+                select,
+                :focus-visible,
+                :focus-within {
+                    touch-action: none !important;
+                }
+
+                .App-dark & {
+                    color: #cecece !important;
+                }
+            }
+        }
+    }
+
+    #botao_rolagem {
+        @media screen and (max-width: 900px) {
+            bottom: 180px;
+        }
+    }
+
+    //Chip input de arquivos
+    &__chip-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+        overflow-y: scroll;
+        max-height: 75px;
+        padding: 0 1rem;
+
+        @include barra-de-rolagem;
+
+        @media screen and (max-width: 670px) {
+            margin: 0 0rem 0 0rem;
+        }
+
+        &__limpar-tudo {
+            color: #1a1a1a !important;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+    }
+
+    & .icon-pdf,
+    .icon-xls-excel,
+    .icon-doc-word {
+        color: #717172;
+        font-size: 20px;
+    }
+
+    &__chip {
+        background: #fff;
+        display: flex;
+        border: 1px solid #949495;
+        border-radius: 6px;
+        padding: 4px 8px;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+
+        .App-dark & {
+            color: #cecece !important;
+            border: 1px solid #3d4953;
+            background-color: #212121;
+        }
+    }
+
+    &__arquivo-pasta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    &__float-label {
+        color: #767676;
+        font-size: 10px;
+        line-height: 120%;
+
+        max-width: 200px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+
+        .App-dark & {
+            color: #7e848c !important;
+        }
+    }
+
+    #input {
+        display: none;
+    }
+
+    &__chip-item {
+        color: #49494b;
+        font-weight: 500;
+        font-size: 11px;
+        max-width: 200px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+
+        @media screen and (max-width: 500px) {
+            max-width: 161px;
+        }
+
+        @media screen and (max-width: 360px) {
+            max-width: 130px;
+        }
+
+        .App-dark & {
+            color: #cecece !important;
+        }
+    }
+
+    &__chip-delete {
+        background-color: transparent !important;
+        cursor: pointer;
+
+        .MuiChip-label {
+            padding-left: 0px !important;
+            margin: 0 !important;
+            padding-right: 0px !important;
+        }
+
+        .MuiSvgIcon-root {
+            margin: 0 !important;
+            color: #1a1a1a !important;
+            font-size: 16px !important;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+    }
+
+    &__chip-itens {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.teste-contador {
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.message__thumbnail-container {
+    margin-top: 8px; /* Optional: Add spacing between message content and thumbnail */
+    text-align: center;
+}
+
+.message__thumbnail {
+    max-width: 100%; /* Make the image responsive */
+    max-height: 120px; /* Adjust the height of the thumbnail */
+    object-fit: cover; /* Ensure the image fits inside the container */
+    border-radius: 4px; /* Optional: Add rounded corners for a nice effect */
+}

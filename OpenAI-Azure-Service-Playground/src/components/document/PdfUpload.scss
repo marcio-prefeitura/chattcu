@@ -1,0 +1,13 @@
+@import '../sass/mixins.scss';
+//importando o mixin da pastas sass
+
+.container {
+    &__document-list {
+        overflow-y: auto;
+        height: calc(100vh - 390px);
+        overflow-x: hidden;
+        padding-top: 1rem;
+
+        @include barra-de-rolagem;
+    }
+}

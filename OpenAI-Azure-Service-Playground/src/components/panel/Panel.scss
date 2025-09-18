@@ -1,0 +1,216 @@
+.panel {
+    display: inline-flex;
+    padding: 0 0 40px 0;
+    flex-direction: column;
+    gap: 2.5rem;
+    justify-content: center;
+    height: 100vh;
+
+    @media screen and (max-width: 440px) {
+        gap: 2rem;
+        padding: 2rem 0 0px 0;
+    }
+
+    &__agent {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        &-icon {
+            display: flex;
+            width: 30px;
+            height: 30px;
+            background-color: #f2f2f2 !important;
+            border-radius: 8px;
+            align-items: center;
+            justify-content: center;
+            color: #49494b;
+
+            .icon-chat-tcu::before,
+            .icon-globe::before,
+            .icon-jurisprudencia::before,
+            .icon-sistema-casa::before,
+            .icon-e-tcu::before,
+            .icon-standard::before {
+                font-size: 20px;
+                color: #49494b;
+
+                .App-dark & {
+                    color: #cecece;
+                }
+            }
+
+            .App-dark & {
+                background-color: #212121 !important;
+                border: 1px solid #cecece !important;
+                color: #cecece !important;
+            }
+        }
+
+        &-label {
+            color: #0f172a;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 20px;
+
+            .App-dark & {
+                color: #cecece;
+            }
+        }
+
+        &-autor {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 16px;
+
+            .App-dark & {
+                color: #97b0ce;
+            }
+        }
+
+        &-descricao {
+            color: #0f172a;
+            text-align: justify;
+            font-size: 14px;
+            line-height: 20px;
+
+            .App-dark & {
+                color: #cecece;
+            }
+        }
+    }
+
+    &__img-logo {
+        width: 13em;
+        height: auto;
+
+        & > path {
+            .App-dark & {
+                fill: #cecece;
+            }
+        }
+
+        @media screen and (max-width: 1500px) {
+            width: 11em;
+        }
+
+        @media screen and (max-width: 500px) {
+            width: 8em;
+            margin-top: 0;
+        }
+    }
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 50px;
+        align-self: stretch;
+    }
+
+    &__title {
+        color: #97b0ce;
+        text-align: center;
+        font-size: 1.875rem;
+        font-weight: 500;
+        line-height: normal;
+    }
+
+    &__container-box {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    &__item-box {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        // justify-content: center;
+        border-radius: 8px;
+        align-items: center;
+        min-width: 200px;
+        max-width: 100%;
+        height: 120px;
+
+        .App-dark & {
+            // border: 1px solid #6a6a6a;
+            color: #cecece;
+        }
+    }
+
+    &__item-text {
+        font-size: 13px;
+        color: #4f4f4f;
+        text-align: left;
+        font-weight: 400;
+        line-height: 20px;
+        letter-spacing: 0.24px;
+
+        .App-dark & {
+            color: #ececec;
+        }
+    }
+
+    &__icon-container {
+        display: flex;
+        padding: 10px;
+        gap: 10px;
+        flex: 1 0 0;
+        align-self: stretch;
+    }
+
+    &__container-icon {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__icon-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50px;
+        background: #fff;
+        color: #444746;
+
+        .App-dark & {
+            background-color: #121212;
+        }
+
+        .icon-balance-2 {
+            font-size: 24px;
+
+            .App-dark & {
+                color: #cecece;
+            }
+        }
+
+        .icon-message-square,
+        .icon-code1 {
+            font-size: 20px;
+
+            .App-dark & {
+                color: #cecece;
+            }
+        }
+
+        .icon-file,
+        .icon-upload {
+            font-size: 20px;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+    }
+}

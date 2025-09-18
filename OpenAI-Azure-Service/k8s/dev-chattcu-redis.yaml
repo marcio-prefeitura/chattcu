@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-chattcu-svc
+  namespace: openai-azure
+  labels:
+    app: redis-openai-azure
+    tier: backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: http
+    - port: 8001
+      targetPort: 8001
+      name: ui
+  selector:
+    app: redis-openai-azure
+    tier: backend
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis-chattcu
+  namespace: openai-azure
+  labels:
+    app: redis-openai-azure
+    tier: backend
+spec:
+  containers:
+    - name: redis
+      image: redis/redis-stack:latest
+      resources:
+        requests:
+          cpu: 50m
+          memory: 512Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi

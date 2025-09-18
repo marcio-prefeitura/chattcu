@@ -1,0 +1,125 @@
+.file-upload {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    z-index: 1000;
+    gap: 1.5rem;
+    background-color: #FFF;
+    padding: 0 1rem;
+
+    @media screen and (max-width: 414px) {
+        width: 100vw;
+    }
+
+    .App-dark & {
+        background-color: #121212 !important;
+    }
+
+    &__box2 {
+        text-align: start;
+        margin-top: 3rem !important;
+    }
+
+    &__boxDropZone {
+        background-color: #F8F9FB;
+        border-radius: 15px;
+        padding: 20px 16px;
+        gap: 0.75rem;
+        display: flex;
+        flex-direction: column;
+
+        .App-dark & {
+            background-color: #1F2021ed !important;
+        }
+    }
+
+    &__titulo {
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        line-height: 28px !important;
+        margin-left: 5rem !important;
+        color: #7E848C;
+        margin-bottom: -1rem !important;
+    }
+
+    &__button {
+        margin: 2rem 0 .8rem 0 !important;
+        text-align: left;
+        border: none !important;
+
+        .App-dark & {
+            color: #88A6FF;
+            text-transform: capitalize !important;
+        }
+    }
+
+    &__button-pasta {
+        background-color: #EBF4FD !important;
+        color: #184895 !important;
+        font-size: .75rem !important;
+        text-transform: capitalize !important;
+
+        .App-dark & {
+            background-color: #1E252C !important;
+            color: #88A6FF !important;
+        }
+    }
+
+    .box-title {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__lista {
+        display: flex;
+        gap: .5rem;
+    }
+
+    & .MuiTypography-root {
+        font-size: .8rem;
+        color: #2D2D2F;
+        font-weight: 500;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 200px;
+        flex: 2;
+
+        .App-dark & {
+            color: #cecece !important;
+        }
+    }
+
+    .MuiOutlinedInput-root {
+        padding-left: 0 !important;
+        background-color: #fff;
+
+        .App-dark & {
+            background-color: #121212 !important;
+            color: #ececec !important;
+        }
+    }
+
+    & .icon-search {
+        font-size: 20px;
+        margin-right: .5rem;
+        color: #1A1A1A;
+
+        .App-dark & {
+            color: #ececec !important;
+        }
+    }
+}
+
+.file-upload__pasta {
+    .MuiOutlinedInput-root {
+        padding-left: 0 !important;
+        background-color: #F9F9F9 ;
+
+        .App-dark & {
+            background-color: #252525 !important;
+        }
+    }
+}

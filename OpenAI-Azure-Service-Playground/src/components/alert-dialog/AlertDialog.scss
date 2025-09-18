@@ -1,0 +1,35 @@
+@import '../sass/mixins.scss';
+
+.delete-arquivo {
+
+  &>div>div {
+    border-radius: 28px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &__titulo {
+    font-size: 1.5rem !important;
+    font-weight: 400 !important;
+    line-height: 2rem !important;
+    letter-spacing: normal;
+  }
+
+  &__description {
+    font-size: .875rem !important;
+    font-weight: 400;
+    line-height: 1.25rem;
+    letter-spacing: normal;
+    color: #444746 !important;
+  }
+
+  &__botao {
+    margin-top: 15px;
+    justify-content: flex-end;
+    gap: 1rem;
+    display: flex;
+    //inclusão do mixin para botão confirmar e cancelar atribuindo o radius de 100px, cor do botão confirmar azul, cor do botão cancelar branco
+    @include botao-confirmar-cancelar(100px, #1c519b, #fff);
+  }
+}

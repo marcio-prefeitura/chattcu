@@ -1,0 +1,128 @@
+.select-model {
+    margin: 0 auto;
+    display: flex;
+
+    @media screen and (max-width: 900px) {
+        padding-top: 0.75rem;
+    }
+
+    &__model-box {
+        border: none !important;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        background: #f2f2f2;
+        width: 100%;
+
+        .App-dark & {
+            background-color: #212121;
+        }
+
+        & .icon-chat-gpt {
+            font-size: 18px;
+            color: #3a71c7;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+
+        & .icon-claude {
+            font-size: 18px;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+    }
+    &__button {
+        color: #7e848c !important;
+        text-transform: unset !important;
+        border-radius: 6px !important;
+        border: 1px solid #cbd5e1 !important;
+        background: #fff !important;
+        font-weight: 500 !important;
+        font-size: 12px !important;
+
+        &:disabled {
+            color: rgba(0, 0, 0, 0.26) !important;
+            border: 1px solid rgba(0, 0, 0, 0.12) !important;
+
+            .App-dark & {
+                color: rgba(255, 255, 255, 0.3) !important;
+                border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            }
+        }
+
+        .App-dark & {
+            color: #cecece !important;
+            background-color: #2f2f2f !important;
+        }
+    }
+
+    &__title {
+        color: #121212 !important;
+        line-height: 40px !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+
+        .App-dark & {
+            color: #cecece !important;
+            background-color: #2f2f2f !important;
+        }
+    }
+
+    &__list {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+
+        .list-model__list-item-nome > span {
+            font-size: 18px;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            width: 80vw !important;
+        }
+
+        .MuiListItemIcon-root {
+            min-width: 34px !important;
+        }
+
+        .Mui-selected {
+            border-radius: 14px;
+        }
+
+        &-item {
+            border-radius: 14px !important;
+        }
+    }
+}
+
+.chat-box__selects {
+    width: 100%; /* Garante que ocupe toda a largura de 850px */
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+
+    @media screen and (max-width: 600px) {
+        margin-left: 8px;
+        margin-bottom: 4px;
+        gap: 0.5rem;
+    }
+
+    &-box {
+        width: 100%;
+        margin: 0 auto; /* Centraliza o componente */
+        display: flex;
+        justify-content: center;
+        padding: 0px 32px 0px 32px;
+        max-width: 850px;
+
+        @media screen and (max-width: 900px) {
+            padding-top: 8px;
+        }
+    }
+}

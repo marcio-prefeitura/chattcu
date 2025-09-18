@@ -1,0 +1,143 @@
+.list-folder {
+    background-color: transparent;
+
+    .icon-chevron-right,
+    .icon-chevron-down {
+        // height: 24px;
+        // width: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .App-dark & {
+            color: #cecece;
+        }
+    }
+
+    & .icon-pdf::before,
+    & .icon-doc-word::before,
+    .icon-xls-excel::before,
+    .icon-video,
+    .icon-volume,
+    .icon-link {
+        color: #717172 !important;
+        font-size: 18px;
+    }
+
+    &__icon-disabled {
+        color: transparent !important;
+    }
+
+    &__name {
+        & .MuiTypography-root {
+            font-size: 12px;
+            color: #2d2d2f;
+            font-weight: 600;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            flex: 2 1;
+            text-align: justify;
+            max-width: 150px;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+
+            @media screen and (max-width: 500px) {
+                max-width: 87px;
+            }
+        }
+
+        &-children {
+            & .MuiTypography-root {
+                font-size: 12px !important;
+                color: #2d2d2f;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                flex: 2 1;
+                text-align: left;
+                max-width: 131px;
+
+                .App-dark & {
+                    color: #cecece !important;
+                }
+            }
+
+            @media screen and (max-width: 500px) {
+                //max-width: 114px;
+            }
+        }
+    }
+
+    .MuiCircularProgress-indeterminate,
+    .box-circular-progress {
+        padding: 9px;
+        width: unset !important;
+        height: unset !important;
+    }
+
+    &__contador {
+        padding: 4px 8px;
+        background-color: #fff;
+        border-radius: 8px;
+        color: #2d2d2f;
+        font-weight: 600;
+        font-size: 11px;
+
+        .App-dark & {
+            background-color: #212121 !important;
+            color: #ececec;
+        }
+    }
+
+    &__bp-icon {
+        border-radius: 4px;
+        width: 16px;
+        height: 16px;
+        background-color: #fff;
+        border: 0.3px solid #717172;
+
+        .App-dark & {
+            background-color: #121212 !important;
+        }
+
+        &-desabilitado {
+            border-radius: 4px;
+            width: 16px;
+            height: 16px;
+            background-color: #ededed;
+            border: 0.3px solid #b6b6b7;
+
+            .App-dark & {
+                background-color: #282828 !important;
+            }
+        }
+
+        &:hover {
+            background-color: #ebf1f5;
+        }
+
+        &-checked {
+            background-color: #3a71c7;
+            background-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0.1), hsla(0, 0%, 100%, 0));
+            border-radius: 4px;
+
+            .App-dark & {
+                background-color: #88a6ff !important;
+            }
+
+            &:hover {
+                background-color: #3a71c7;
+            }
+
+            &::before {
+                display: block;
+                width: 16px;
+                height: 16px;
+                background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M12 5c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z' fill='%23fff'/%3E%3C/svg%3E");
+                content: '';
+            }
+        }
+    }
+}

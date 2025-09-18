@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    allow.http: 'false'
+  name: homol-chattcu-backend-ing
+  namespace: homol-chattcu
+spec:
+  rules:
+  - host: chattcu-${ambiente}.producao.rancher.tcu.gov.br
+    http:
+      paths:
+      - backend:
+          service:
+            name: homol-chattcu-backend-svc
+            port:
+              number: 8000
+        path: /api
+        pathType: ImplementationSpecific
+  ingressClassName: ingress-nginx

@@ -1,0 +1,24 @@
+FROM mcr.microsoft.com/vscode/devcontainers/python:3.12-bullseye 
+
+RUN apt-get update \
+  && apt-get install gcc -y \
+  && apt-get install cabextract -y \
+  && apt-get install wget -y \
+  && apt-get install xfonts-utils -y \
+  && apt-get install ffmpeg -y \
+  && wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8.1_all.deb \
+  && dpkg -i ttf-mscorefonts-installer_3.8.1_all.deb \
+  && apt-get install libreoffice -y \
+  && apt-get clean 
+
+WORKDIR /code
+
+COPY ./requirements_test.txt /code/requirements_test.txt
+
+RUN curl -fsSL https://aka.ms/install-azd.sh | bash
+
+RUN pip install --no-cache-dir --upgrade -r /code/requirements_test.txt --trusted-host=pypi.org --trusted-host=files.pythonhosted.org
+
+COPY ./ /code
+
+EXPOSE 8000

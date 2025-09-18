@@ -1,0 +1,65 @@
+.mensagem {
+    &__container {
+        display: flex;
+        align-items: center;
+        font-size: .875rem !important;
+        padding: 0 8px !important;
+    }
+
+    &__erro {
+        color: #701812 !important;
+        border: 1px solid #701812;
+        margin-bottom: 60px;
+
+        .App-dark & {
+            color: #cecece !important;
+        }
+    }
+
+    &__sucesso {
+        color: #224c24 !important;
+        border: 1px solid #224c24;
+
+        .App-dark & {
+            color: #cecece !important;
+        }
+    }
+
+    &__info {
+        color: #244c8a !important;
+        border: 1px solid #244c8a;
+
+        .App-dark & {
+            color: #cecece !important;
+        }
+
+        &-container {
+            display: flex;
+            align-items: center;
+            padding: 0 16px !important;
+            color: #244c8a !important;
+            border: 1px solid #244c8a;
+            font-size: .875rem !important;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+
+    }
+
+    &__warning {
+        color: #c2b324 !important;
+        border: 1px solid #c2b324;
+
+        .App-dark & {
+            color: #cecece !important;
+        }
+    }
+
+}
+
+.funciona {
+    display: flex;
+    align-items: center;
+}

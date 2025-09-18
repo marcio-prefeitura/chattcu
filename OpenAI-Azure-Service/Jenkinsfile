@@ -1,0 +1,230 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent any
+
+    environment {
+        GIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        COMMITER_NAME = sh(script: 'git show -s --pretty=%an', returnStdout: true).trim()
+        COMMITER_EMAIL = sh(script: 'git show -s --format=%ae', returnStdout: true).trim()
+        COMMITER_COMMENT = sh(script: 'git show -s --pretty=%B', returnStdout: true).trim()
+
+        REGISTRY_HOST = 'registry.rancher.tcu.gov.br'
+
+        TEAMS_HOOK = 'https://tcucloud.webhook.office.com/webhookb2/4c2bc8d8-84dd-47d4-aafa-7d52ae9d0f48@bf158188-9a11-44c2-b7fc-21e85613ba27/JenkinsCI/576057dc0eb347dfac0646028fee8c28/191fe4e5-7f0b-40e7-919d-786a8dfc7d07'
+        PYTHON_IMAGE = 'python:3.12-slim-bullseye'
+        LAST_STAGE_RUN = 'Inicializando Build'
+
+        DOCKER_REG_CREDS = credentials 'docker-registry'  //ao criar essa variavel, cria-se _USR e _PSW tb
+        K8S_DEV_CREDENTIALS = credentials 'k8s-desenvol'
+        K8S_HOMOL_CREDENTIALS = credentials 'k8s-producao'
+        K8S_PROD_CREDENTIALS = credentials 'k8s-producao'
+        K8S_ACT_CREDENTIALS = credentials 'k8s-aceite'
+
+        IMAGE_NAME = 'registry.rancher.tcu.gov.br/aplicacoes/openai-azure'
+        MODULE_NAME = 'backend'
+        PROJECT_NAME = 'chattcu'
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+        disableConcurrentBuilds()
+        skipStagesAfterUnstable()
+        timeout(time: 40, unit: 'MINUTES')
+        parallelsAlwaysFailFast()
+        gitLabConnection('jenkins-gitlab')
+    }
+
+    stages {
+        stage('Unit Testing & Coverage') {
+            agent { docker { image PYTHON_IMAGE; reuseNode true } }
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                sh "apt update && apt install -yqq git"
+                sh "pip install -r ./requirements_test.txt --trusted-host=pypi.org --trusted-host=files.pythonhosted.org"
+                sh "pre-commit run --all-files --show-diff-on-failure --hook-stage pre-commit"
+                sh "python -m pytest -vv"
+            }
+        }
+
+        stage('SonarQube') {
+            agent {
+                docker {
+                    image "${REGISTRY_HOST}/public-images/sonar-scanner-cli-java:17-jre"
+                    reuseNode true
+                }
+            }
+            steps {
+                milestone 2
+                withSonarQubeEnv(credentialsId: 'sonar-jenkins-token', installationName: 'SonarTCU'){
+                     // para debug adicionar -Dsonar.verbose=true
+                     sh "/usr/bin/sonar-scanner"
+                 }
+            }
+        }
+
+        stage('Create Docker Image') {
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                buildAndPushDockerImage()
+            }
+        }
+
+        // stage('DESENVOL: Create/Update K8s Namespace') {
+        //     steps {
+        //         script { LAST_STAGE_RUN = env.STAGE_NAME }
+        //         createK8sNs('dev')
+        //     }
+        // }
+
+        // stage('DESENVOL: Create/Update K8s Objects') {
+        //     steps {
+        //         script { LAST_STAGE_RUN = env.STAGE_NAME }
+        //         updateK8s('dev')
+        //         tagAndPushDockerImageForEnvironment('desenvol')
+        //     }
+        // }
+
+        // stage('HOMOL: Create/Update K8s Namespace') {
+        //     when {
+        //       branch 'homol'
+        //     }
+        //     steps {
+        //         script { LAST_STAGE_RUN = env.STAGE_NAME }
+        //         createK8sNs('homol')
+        //     }
+        // }
+
+        // stage('HOMOL: Create/Update K8s Objects') {
+        //     when {
+        //       branch 'homol'
+        //     }
+        //     steps {
+        //         script { LAST_STAGE_RUN = env.STAGE_NAME }
+        //         updateK8s('homol')
+        //         tagAndPushDockerImageForEnvironment('homol')
+        //     }
+        // }
+
+        stage('ACEITE/DEV: Create K8s Namespace') {
+            when {
+              expression {env.GIT_BRANCH == 'origin/main'}
+            }
+            steps {
+                parallel(
+                    DEV: {
+                        script { LAST_STAGE_RUN = env.STAGE_NAME }
+                        createK8sNs('dev')
+                    },
+                    ACEITE: {
+                        script { LAST_STAGE_RUN = env.STAGE_NAME }
+                        createK8sNs('aceite')
+                    }
+                )
+            }
+        }
+
+        stage('ACEITE/DEV: Update K8s') {
+            when {
+              expression {env.GIT_BRANCH == 'origin/main'}
+            }
+            steps {
+                parallel(
+                    DEV: {
+                        script { LAST_STAGE_RUN = env.STAGE_NAME }
+                        updateK8s('dev')
+                        //tagAndPushDockerImageForEnvironment('dev')
+                    },
+                    ACEITE: {
+                        script { LAST_STAGE_RUN = env.STAGE_NAME }
+                        updateK8s('aceite')
+                        //tagAndPushDockerImageForEnvironment('aceite')
+                    }
+                )
+            }
+        }
+
+        stage('PRODUÇÃO: Create/Update K8s Namespace') {
+            when {
+              expression {env.GIT_BRANCH == 'origin/main'}
+            }
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                createK8sNs('prod')
+            }
+        }
+
+        stage('PRODUÇÃO: Create/Update K8s Objects') {
+            when {
+              expression {env.GIT_BRANCH == 'origin/main'}
+            }
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                updateK8s('prod')
+                tagAndPushDockerImageForEnvironment('producao')
+            }
+        }
+
+    }
+
+    post {
+        success {
+            office365ConnectorSend message: "Novo deploy em <b>PRODUÇÃO</b> <br />Committer: <b>${COMMITER_NAME} - ${COMMITER_EMAIL}</b> <br />Comment: <b>${COMMITER_COMMENT}</b> <br />Hash: <b>${GIT_HASH}</b>",
+                    color: '00FF00', status: currentBuild.result, webhookUrl: TEAMS_HOOK
+        }
+        failure {
+            office365ConnectorSend message: "Build FALHOU no stage <b>${LAST_STAGE_RUN}</b> <br />Committer: <b>${COMMITER_NAME} - ${COMMITER_EMAIL}</b> <br />Comment: <b>${COMMITER_COMMENT}</b> <br />Hash: <b>${GIT_HASH}</b>",
+                    color: '#FF0000', status: currentBuild.result, webhookUrl: TEAMS_HOOK
+        }
+        unstable {
+            office365ConnectorSend message: "Build INSTÁVEL no stage <b>${LAST_STAGE_RUN}</b> <br />Committer: <b>${COMMITER_NAME} - ${COMMITER_EMAIL}</b> <br />Comment: <b>${COMMITER_COMMENT}</b> <br />Hash: <b>${GIT_HASH}</b>",
+                    color: '#FFFF00', status: currentBuild.result, webhookUrl: TEAMS_HOOK
+        }
+
+    }
+}
+
+def buildAndPushDockerImage() {
+    sh 'echo $DOCKER_REG_CREDS_PSW | docker login -u $DOCKER_REG_CREDS_USR --password-stdin registry.rancher.tcu.gov.br'
+    sh "docker build -t ${IMAGE_NAME}-${MODULE_NAME}:${GIT_HASH} . "
+    sh "docker push ${IMAGE_NAME}-${MODULE_NAME}:${GIT_HASH}"
+}
+
+def createK8sNs(environment) {
+    sh "kubectl apply -f k8s/${environment}-${PROJECT_NAME}-ns.yaml --kubeconfig ${k8sCredentials(environment)}"
+}
+
+def updateK8s(environment) {
+    sh "sed s/\\\${tag-imagem-docker}/${GIT_HASH}/g k8s/${environment}-${PROJECT_NAME}-deploy.yaml | sed s~\\\${image-name}~${IMAGE_NAME}~g | sed s/\\\${module-name}/${MODULE_NAME}/g | sed s/\\\${profile}/${environment}/g | kubectl apply --grace-period 720 --kubeconfig ${k8sCredentials(environment)} -f -"
+    sh "kubectl apply -f k8s/${environment}-${PROJECT_NAME}-svc.yaml --kubeconfig ${k8sCredentials(environment)}"
+    sh "kubectl apply -f k8s/${environment}-${PROJECT_NAME}-redis.yaml --kubeconfig ${k8sCredentials(environment)}" 
+    sh "sed s/\\\${ambiente}/${ambiente(environment)}/g k8s/${environment}-${PROJECT_NAME}-ing.yaml | kubectl apply --kubeconfig ${k8sCredentials(environment)} -f -"
+    testRolloutSuccess(environment)
+}
+
+def testRolloutSuccess(environment) {
+    def TIMEOUT = '20m'
+    if (environment == 'homol')
+    sh "kubectl rollout status deployment.apps/${environment}-${PROJECT_NAME} --timeout ${TIMEOUT} -n ${environment}-${PROJECT_NAME} --kubeconfig ${k8sCredentials(environment)}"
+    if (environment == 'prod')
+    sh "kubectl rollout status deployment.apps/openai-azure-backend-deploy --timeout ${TIMEOUT} -n openai-azure --kubeconfig ${k8sCredentials(environment)}"
+    if (environment == 'dev')
+    sh "kubectl rollout status deployment.apps/openai-azure-backend-deploy --timeout ${TIMEOUT} -n openai-azure --kubeconfig ${k8sCredentials(environment)}"
+    if (environment == 'aceite')
+    sh "kubectl rollout status deployment.apps/openai-azure-backend-deploy --timeout ${TIMEOUT} -n openai-azure --kubeconfig ${k8sCredentials(environment)}"
+}
+
+def tagAndPushDockerImageForEnvironment(environment) {
+    sh "docker tag  ${IMAGE_NAME}-${MODULE_NAME}:${GIT_HASH}  ${IMAGE_NAME}-${MODULE_NAME}:${environment}"
+    sh "docker push  ${IMAGE_NAME}-${MODULE_NAME}:${environment}"
+}
+
+def k8sCredentials(environment) {
+    return [dev: K8S_DEV_CREDENTIALS, homol: K8S_HOMOL_CREDENTIALS, prod: K8S_PROD_CREDENTIALS, aceite: K8S_ACT_CREDENTIALS][environment]
+}
+
+def static ambiente(environment) {
+    return [dev: 'desenvol', homol: 'homol', prod: 'producao', aceite: 'aceite'][environment]
+}
+
+

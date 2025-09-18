@@ -1,0 +1,409 @@
+@import '../../sass/mixins.scss';
+
+.gpt-store-content {
+    display: flex;
+    flex-direction: column;
+    height: calc(-66px + 100vh);
+    overflow-y: visible !important;
+    margin: 0px auto;
+    padding: 1rem 0px;
+
+    &__icon {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        background: #fff;
+        border-radius: 8px;
+        padding: 6px;
+
+        .App-dark & {
+            background-color: #212121;
+        }
+    }
+
+    .App-dark & {
+        background-color: #212121;
+    }
+
+    &__title {
+        .App-dark & {
+            color: #cecece;
+        }
+    }
+
+    &__subtitle {
+        .App-dark & {
+            color: #666;
+        }
+    }
+
+    &__selecionado {
+        display: flex !important;
+        min-width: 20px !important;
+        min-height: 20px !important;
+        padding: 2px 4px !important;
+        justify-content: center !important;
+        align-items: center !important;
+        border-radius: 100px !important;
+        background: #3a71c7 !important;
+        color: #fff !important;
+        text-align: center !important;
+        font-size: 12px !important;
+        font-weight: 400 !important;
+    }
+
+    &__sem-selecionado {
+        display: flex !important;
+        min-width: 20px !important;
+        min-height: 20px !important;
+        padding: 2px 4px !important;
+        justify-content: center !important;
+        align-items: center !important;
+        border-radius: 100px !important;
+        border: 1px solid #49494b !important;
+        color: #49494b !important;
+        text-align: center !important;
+        font-size: 12px !important;
+        font-weight: 400 !important;
+    }
+
+    &__criar-button {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        text-transform: none;
+        font-weight: 500;
+        height: 44px;
+        font-size: 12px !important;
+        border-radius: 8px;
+
+        .icon-plus::before {
+            font-size: 15px;
+            color: #fff;
+        }
+    }
+
+    &__header {
+        margin-bottom: 32px;
+
+        h5 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            font-weight: 500;
+
+            .App-dark & {
+                color: #cecece;
+            }
+        }
+
+        .MuiTypography-subtitle1 {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    }
+
+    &__scroll {
+        height: 100%;
+        overflow-y: auto;
+        width: 100%;
+        @include barra-de-rolagem;
+    }
+
+    &__main {
+        padding: 0 32px;
+        padding-top: 12px;
+        margin: 0 auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        max-width: 850px;
+    }
+
+    &__search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        background-color: #fff;
+        padding: 16px 0;
+
+        .App-dark & {
+            background-color: #212121;
+        }
+
+        .gpt-store-filter {
+            flex: 1;
+
+            .box-title {
+                width: 100%;
+                padding: 0;
+
+                .box-filtrar {
+                    width: 100%;
+
+                    .MuiFormControl-root {
+                        width: 100%;
+                    }
+
+                    .MuiOutlinedInput-root {
+                        border-radius: 8px;
+                        width: 100%;
+                        background-color: #fff;
+                        border: 1px solid #e0e0e0;
+
+                        .App-dark & {
+                            background-color: #2f2f2f;
+                        }
+
+                        input {
+                            padding: 12px 16px;
+                            font-size: 12px;
+
+                            &::placeholder {
+                                color: #666;
+
+                                .App-dark & {
+                                    color: #cecece;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // .meus-especialistas {
+        //     color: #666;
+        //     font-size: 14px;
+        //     white-space: nowrap;
+        //     font-weight: 700;
+        // }
+    }
+
+    &__box-button {
+        display: flex;
+        justify-content: center;
+    }
+
+    &__categories {
+        display: flex;
+        gap: 3px;
+        flex-wrap: wrap;
+        padding: 8px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 32px;
+        background-color: #fff;
+    }
+
+    &__indicator {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+
+        .MuiTypography-subtitle1 {
+            color: #767676;
+            font-size: 14px;
+            text-align: left;
+        }
+    }
+
+    &__tabs {
+        border-bottom: 1px solid #ccc;
+
+        &-chevron {
+            .App-dark & {
+                color: #cecece;
+            }
+        }
+
+        &-item {
+            .App-dark & {
+                color: #cecece;
+                text-transform: none;
+            }
+        }
+    }
+
+    &__ver-mais {
+        font-size: 12px !important;
+        text-transform: none !important;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 24px;
+    }
+
+    &__card-description {
+        display: -webkit-box;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__store-card {
+        padding: 16px;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+
+        &:hover {
+            background-color: #f2f2f2;
+        }
+
+        .App-dark & {
+            background-color: #2f2f2f;
+            color: #cecece;
+        }
+    }
+
+    &__card-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        & .icon {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #0009;
+
+            .App-dark & {
+                color: #6C6C6C;
+             }
+        }
+
+        & .text {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        & .title {
+            color: #2d2d2f;
+            font-weight: 700;
+            text-align: left;
+
+            .App-dark & {
+                color: #cecece;
+             }
+        }
+
+        & .subtitle {
+            color: #49494b;
+            text-align: left;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            .App-dark & {
+                color: #f9f9f9;
+             }
+        }
+    }
+
+    &__trending {
+        margin-top: 40px;
+        text-align: left;
+
+        .icon-alta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            display: flex;
+            padding: 6px;
+
+            .App-dark & {
+                background-color: #2f2f2f;
+            }
+        }
+
+        &-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        &-card-wrapper {
+            position: relative;
+            padding-left: 16px;
+        }
+
+        &-number {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 16px !important;
+            font-weight: 900 !important;
+        }
+
+        &-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+
+            .App-dark & {
+                background-color: #212121;
+                border: 1px solid #f9f9f9;
+            }
+        }
+
+        &__card-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #0009;
+
+            .App-dark & {
+                color: #6C6C6C;
+             }
+        }
+
+        .text {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        & .title {
+            color: #2d2d2f;
+            font-weight: 600;
+
+            .App-dark & {
+               color: #cecece;
+            }
+        }
+
+        & .subtitle {
+            color: #49494b;
+
+            .App-dark & {
+                color: #cecece;
+             }
+        }
+    }
+}

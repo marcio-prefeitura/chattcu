@@ -1,0 +1,71 @@
+$primary-color: #01a6fd;
+$secondary-color: #014468;
+$white-color: #fff;
+
+.button-realtime {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%!important;
+  width: 105px;
+  height: 105px;  
+  color: rgb(246, 248, 248)!important;
+  font-size: 30px!important;
+  background: linear-gradient($primary-color, $secondary-color);
+  fill: #fff!important;  
+  cursor: pointer;
+
+  &__cancelar {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%!important;
+    width: 105px;
+    height: 105px;  
+    color: rgb(246, 248, 248)!important;    
+    background: linear-gradient(#fae259, #f1dd25);
+    fill: #fff!important;  
+    cursor: pointer;
+    font-size: 20px!important;
+  }
+
+  &__pulse {    
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 105px;
+    height: 105px;
+    border-radius: 50%!important;
+    color: rgb(246, 248, 248)!important;
+    font-size: 30px!important;
+    background: linear-gradient($primary-color, $secondary-color);
+    fill: #fff!important;  
+  }
+
+  &__pulse.button-realtime__pulse::before,
+  &__pulse.button-realtime__pulse::after{
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: $primary-color;
+      border-radius: 50%!important;
+      z-index: -1;
+      opacity: .4;
+      animation: pulse 2s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    100%{
+        transform: scale(1.5);
+        opacity: 0;
+    }
+  }
+
+  &__pulse::after{
+    animation-delay: 1s;
+  }
+}

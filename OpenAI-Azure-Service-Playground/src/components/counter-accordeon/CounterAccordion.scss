@@ -1,0 +1,14 @@
+.tab-counter {
+    padding: 4px 8px;
+    background-color: #fff;
+    border-radius: 8px;
+    color: #2D2D2F;
+    font-weight: 500;
+    font-size: 11px;
+
+    .App-dark & {
+        background-color: #121212 !important;
+        color: #ececec;
+    }
+}
+

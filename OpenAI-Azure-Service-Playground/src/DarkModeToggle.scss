@@ -1,0 +1,7 @@
+.dark-mode {
+    &__icon {
+        .App-dark & {
+            color: #cecece;
+        }
+    }
+}

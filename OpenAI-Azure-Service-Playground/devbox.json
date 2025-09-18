@@ -1,0 +1,10 @@
+{
+  "packages": [
+    "nodejs@18",
+    "python@3.12",
+    "poetry"
+  ],
+  "shell": {
+    "init_hook": "poetry shell"
+  }
+}

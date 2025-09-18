@@ -1,0 +1,19 @@
+{
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "python.formatting.provider": "none",
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "off",
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#44270D",
+        "titleBar.activeBackground": "#5F3612",
+        "titleBar.activeForeground": "#FDFAF7"
+    },
+    "editor.rulers": [130]
+}

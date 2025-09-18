@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "cicd"
+version = "0.1.0"
+description = "Projeto para publicar o Teams App usando Microsoft Graph API"
+authors = ["Selmison Miranda <campelom@tcu.gov.br>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+azure-identity = "^1.14.0"
+anyio = "^4.0.0"
+httpx = "^0.25.0"
+azure-keyvault-secrets = "^4.7.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

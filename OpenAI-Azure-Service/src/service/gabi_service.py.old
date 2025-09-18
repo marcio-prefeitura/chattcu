@@ -1,0 +1,672 @@
+# import io
+# import json
+# import logging
+# import os
+# import tempfile
+# import traceback
+# from typing import List, Tuple
+
+# import pydub
+# from langchain.chains import LLMChain
+# from langchain.prompts import ChatPromptTemplate
+# from openai import AsyncAzureOpenAI
+# from opentelemetry import trace
+# from pydantic import BaseModel
+# from tqdm import tqdm
+
+# from src.conf.env import configs
+# from src.domain.llm.model_factory import ModelFactory
+# from src.domain.schemas import ItemSistema
+# from src.infrastructure.azure_blob.azure_blob import AzureBlob
+# from src.infrastructure.env import CONTAINER_NAME, FUNCTION_SCHEMA_PARTICIPANTS
+# from src.infrastructure.env import GABI_PROMPTS_FUNCTIONS as PROMPTS_FUNCTIONS
+# from src.infrastructure.env import MINISTROS_TCU, MODELO_PADRAO, MODELOS
+# from src.infrastructure.roles import DESENVOLVEDOR
+# from src.infrastructure.security_tokens import DecodedToken
+# from src.util.gabi_util import (
+#     create_chat_messages,
+#     create_chat_messages_social_media,
+#     format_general_platform_style_captions,
+#     name_file,
+# )
+
+# logger = logging.getLogger(__name__)
+# tracer = trace.get_tracer(__name__)
+
+# Define the chunk size (20 minutes in milliseconds)
+# CHUNK_AUDIO_SIZE_MS = 20 * 60 * 1000  # 20 minutes
+
+# MODELO_LLM = MODELOS[MODELO_PADRAO]
+# MODELO_WHISPER = MODELOS["WHISPER"]
+
+
+# class PromptGenerator:
+#     @tracer.start_as_current_span("__init__PromptGenerator")
+#     def __init__(self, tipo_media: str):
+#         self.type_of_media = tipo_media  ## tipo_media pode ser "geral" ou "reuniao"
+
+#     @tracer.start_as_current_span("get_prompts_and_functions")
+#     def get_prompts_and_functions(self):
+#         if self.type_of_media not in PROMPTS_FUNCTIONS:
+#             raise ValueError(
+#                 f"Invalid media type: {self.type_of_media}. "
+#                 + f"Valid types are: {', '.join(PROMPTS_FUNCTIONS.keys())}"
+#             )
+
+#         return PROMPTS_FUNCTIONS[self.type_of_media]
+
+
+# class GabiResponse(BaseModel):
+#     transcript: str
+#     summary: str
+#     itens_filenames: List[str]
+
+
+# @tracer.start_as_current_span("upload_content")
+# async def upload_content(
+#     content: List[Tuple[str, str]],
+#     upload_container: str,
+#     original_blob_name: str,
+#     azure_blob_instance: AzureBlob = AzureBlob(),
+# ) -> List[str]:
+#     # azure_blob_instance = AzureBlob()  # Create an instance of AzureBlob
+#     filenames = []
+
+#     for description, item in content:
+#         try:
+#             logger.info(
+#                 f"Vamos agora tentar enviar o arquivo de {description} para o Blob..."
+#             )
+
+#             # Convert the string item to BytesIO
+#             item_bytes_io = io.BytesIO(item.encode("utf-8"))
+
+#             item_filename = await name_file(
+#                 original_blob_name=original_blob_name, description=description
+#             )
+
+#             logger.info(f"Nome do arquivo a ser enviado: {item_filename}")
+
+#             # Ensure the BytesIO object is at the beginning before uploading
+#             item_bytes_io.seek(0)
+
+#             await azure_blob_instance.upload_blob(
+#                 container_name=upload_container,
+#                 filename=item_filename,
+#                 data=item_bytes_io,
+#             )
+
+#             filenames.append(item_filename)
+
+#             logger.info(f"Upload de {description} foi realizado com sucesso!")
+#         except Exception as e:
+#             logger.error(f"Erro ao processar or fazer o upload de {description}: {e}")
+#             filenames.append("")
+
+#     return filenames
+
+
+# @tracer.start_as_current_span("participants_list_to_string")
+# async def participants_list_to_string(participants):
+#     participants_str = ""
+
+#     for participant in participants:
+#         participants_str += (
+#             f"Nome: {participant['name']}, Cargo/Função: {participant['position']}\n"
+#         )
+
+#     return participants_str
+
+
+# @tracer.start_as_current_span("extract_participants")
+# async def extract_participants(
+#     transcription_text: str, token: DecodedToken, PromptGenerator: PromptGenerator
+# ) -> str:
+#     logger.info("Ferramenta de extração de participantes iniciada")
+
+#     # Initialize the PromptGenerator with the correct tipo_conteudo
+#     generator = PromptGenerator("reuniao")
+
+#     # Get the prompt for "reuniao"
+#     prompts_and_functions = generator.get_prompts_and_functions()
+#     prompt = prompts_and_functions[0][
+#         "prompt"
+#     ]  # Assuming we take the first prompt for simplicity
+
+#     # Concatenate the prompt with the transcription text
+#     texto = prompt + transcription_text + "'"
+
+#     # Prepare the message
+#     message = await create_chat_messages(texto)
+
+#     # Enviar o texto para o modelo de extração de participantes
+#     try:
+#         logger.info("Enviando o texto para o modelo de extração de participantes...")
+
+#         llm = ModelFactory.get_generic_azure_openai_model(
+#             token=token,
+#             model=MODELOS[MODELO_PADRAO],
+#             api_base=configs.APIM_OPENAI_API_BASE,
+#             api_key=configs.APIM_OPENAI_API_KEY,
+#         )
+
+#         response = await llm.chat.completions.create(
+#             model=MODELO_LLM["deployment_name"],
+#             messages=message,
+#             functions=[FUNCTION_SCHEMA_PARTICIPANTS],
+#             function_call={"name": "extract_meeting_participants"},
+#             extra_headers={
+#                 "usuario": token.login,
+#                 "desenvol": str(DESENVOLVEDOR in token.roles),
+#             },
+#         )
+
+#         # Acessar a chamada da função
+#         function_call = response.choices[0].message.function_call
+#         function_arguments = json.loads(function_call.arguments)
+
+#         logger.info("Functions Arguments:")
+#         logger.info(function_arguments)
+
+#         participants = function_arguments["participants"]
+
+#         lista_participantes = await participants_list_to_string(participants)
+
+#         return "#### Participantes\n" + lista_participantes
+
+#     except Exception as e:
+#         traceback.print_exc()
+#         logger.error(f"Erro ao extrair participantes: {e}")
+#         return f"Erro ao extrair participantes: {e}"
+
+
+# @tracer.start_as_current_span("gabi_summ")
+# async def gabi_summ(
+#     transcription_text: str,
+#     token: DecodedToken,
+#     tipo_conteudo: str = "",
+#     prompt_generator=PromptGenerator,
+# ) -> Tuple[bool, str]:
+#     logger.info("Ferramenta de sumarização iniciada")
+
+#     # Defina o prompt com base na análise
+#     logger.info("Definindo o prompt com base na análise...")
+
+#     generator = prompt_generator(tipo_conteudo)
+
+#     # Get the prompts and functions based on the type of media
+#     prompts_and_functions = generator.get_prompts_and_functions()
+
+#     logger.info("Iniciando a sumarização...")
+
+#     # Initialize a list to collect all responses
+#     all_summaries = []
+#     previous_response = transcription_text
+
+#     numero_prompt = 1
+#     # Loop through each prompt and function
+#     for pf in prompts_and_functions:
+#         prompt = pf["prompt"]
+#         function_name = pf["function"]
+#         cascade = pf.get("cascade", False)
+
+#         # Concatenate the prompt with the appropriate text
+#         if cascade:
+#             texto = prompt + previous_response + "'"
+#         else:
+#             texto = prompt + transcription_text + "'"
+
+#         message = await create_chat_messages_social_media(texto)
+
+#         quantidade_prompts = len(prompts_and_functions)
+
+#         logger.info(f"Processando o prompt {numero_prompt} de {quantidade_prompts}...")
+
+#         numero_prompt += 1
+
+#         try:
+#             if function_name and function_name in globals():
+#                 logger.info(
+#                     f"Chamando a função: {function_name} com o prompt correspondente"
+#                 )
+#                 # Call the corresponding function if it exists
+#                 function_response = await globals()[function_name](
+#                     previous_response, token, prompt_generator
+#                 )
+#                 message_content = function_response
+#             else:
+#                 logger.info("Enviando o texto para o modelo de sumarização")
+#                 llm = ModelFactory.get_model(
+#                     api_key=configs.APIM_OPENAI_API_KEY,
+#                     api_base=configs.APIM_OPENAI_API_BASE,
+#                     api_type=configs.OPENAI_API_TYPE,
+#                     token=token,
+#                     model=MODELO_LLM,
+#                     max_tokens_out=4096,
+#                     temperature=0.7,
+#                     top_p=0.9,
+#                     verbose=False,
+#                 )
+
+#                 # Convertendo a lista de dicionários para uma lista de tuplas
+#                 messages_tuples = [(msg["role"], msg["content"]) for msg in message]
+
+#                 chain = LLMChain(
+#                     llm=llm,
+#                     prompt=ChatPromptTemplate.from_messages(messages_tuples),
+#                     verbose=True,
+#                 )
+
+#                 message_content = await chain.apredict()
+
+#                 logger.info(message_content)
+
+#                 # message_content = response.choices[0].message.content
+
+#             logger.info("Sumarização concluída com sucesso!")
+
+#             all_summaries.append(message_content)
+#             all_summaries.append("\n\n")
+#             previous_response = message_content
+
+#         except Exception as e:
+#             traceback.print_exc()
+#             logger.info(f"Erro ao sumarizar com o prompt {prompt}: {e}")
+#             all_summaries.append(f"Erro ao sumarizar com o prompt {prompt}: {e}")
+
+#     # Combine all summaries into a single response or handle them as needed
+#     combined_summary = "\n\n".join(all_summaries)
+#     return True, combined_summary
+
+
+# async def extract_audio_from_youtube(url: str):
+#     logger.info("Extraindo áudio do link do Youtube...")
+
+#     # Get the audio URL using yt_dlp
+#     ydl_opts = {
+#         "format": "bestaudio/best",
+#         "skip_download": True,
+#         "nocheckcertificate": True,  # Set to False to bypass SSL verification (not recommended for production)
+#         "rm-cache-dir": True,
+#     }
+
+#     try:
+#         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+#             info_dict = ydl.extract_info(url, download=False)
+#             formats = info_dict.get("formats", [])
+#             audio_url = None
+
+#             for f in formats:
+#                 if f.get("acodec") != "none":
+#                     audio_url = f["url"]
+#                     break
+
+#         if not audio_url:
+#             logger.info("Nenhum áudio encontrado no vídeo do Youtube.")
+
+#             return {"error": "Nenhum áudio encontrado no vídeo do Youtube."}
+
+#         logger.info("URL do áudio encontrado. Transmitindo Youtube para a memória...")
+
+#         # Check if the audio stream exists
+#         command = ["ffmpeg", "-i", audio_url]
+#         process = subprocess.Popen(
+#             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+#         )
+#         stdout, stderr = process.communicate()
+
+#         # Stream the audio to memory
+#         command = ["ffmpeg", "-i", audio_url, "-f", "mp3", "pipe:1"]
+#         process = subprocess.Popen(
+#             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+#         )
+#         stdout, stderr = process.communicate()
+
+#         if process.returncode != 0:
+#             raise GabiException(f"Erro de ffmpeg: {stderr.decode('utf-8')}")
+
+#         logger.info(
+#             "Transferência do Youtube para a memória bem-sucedida! \n \n Carregando no pydub..."
+#         )
+
+#         # Load the audio into pydub
+#         audio = pydub.AudioSegment.from_file(io.BytesIO(stdout), format="mp3")
+
+#         logger.info("Áudio carregado no pydub com sucesso!")
+
+#         return audio
+#     except Exception as e:
+#         logger.error(f"Erro ao extrair áudio da mídia social: {e}")
+#         return None
+
+
+# @tracer.start_as_current_span("extract_audio_from_stream")
+# async def extract_audio_from_stream(stream: io.BytesIO):
+#     logger.info("Carregando áudio no pydub...")
+
+#     try:
+#         # Load the audio into pydub
+#         logger.info("Carregando áudio no pydub...")
+
+#         audio_orig = pydub.AudioSegment.from_file(stream)
+
+#         # Converting to mp3
+#         mp3_io = io.BytesIO()
+
+#         audio_orig.export(mp3_io, format="mp3")
+#         mp3_io.seek(0)
+
+#         audio = pydub.AudioSegment.from_file(mp3_io, format="mp3")
+
+#         logger.info("Áudio carregado no pydub com sucesso!")
+
+#         return audio
+#     except Exception as e:
+#         logger.info(f"Erro ao carregar áudio do blob file: {e}")
+#         traceback.print_exc()
+#         return None
+
+
+# @tracer.start_as_current_span("create_audio_chunks")
+# async def create_audio_chunks(stream):
+#     audio = pydub.AudioSegment.from_file(stream.file)
+
+#     duration_ms = len(audio)
+
+#     logger.info(
+#         f"Áudio carregado. Duração do áudio: {duration_ms / 1000 / 60:.2f} minutes."
+#     )
+
+#     logger.info(f"Tamanho do chunk: {CHUNK_AUDIO_SIZE_MS / 1000 / 60:.2f} minutos.")
+
+#     # Create chunks
+#     chunks = {}
+
+#     for i in range(0, duration_ms, CHUNK_AUDIO_SIZE_MS):
+#         chunk = audio[i : i + CHUNK_AUDIO_SIZE_MS]
+
+#         temp_file = tempfile.NamedTemporaryFile(suffix=".mp3", delete=False)
+#         chunk.export(temp_file.name, format="mp3")
+
+#         chunk_size_bytes = os.path.getsize(temp_file.name)
+#         chunk_index = i // CHUNK_AUDIO_SIZE_MS + 1
+
+#         chunks[f"chunk_{chunk_index}"] = {
+#             "path": temp_file.name,
+#             "size_bytes": chunk_size_bytes,
+#             "chunk_duration_s": CHUNK_AUDIO_SIZE_MS / 1000,
+#             "duration_s": duration_ms / 1000,
+#         }
+
+#         logger.info(
+#             f"Chunk {chunk_index} criado. Tamanho: {chunk_size_bytes / 1024:.2f} KB."
+#         )
+
+#     logger.info("Todos os pedaços criados com sucesso.")
+
+#     return chunks
+
+
+# @tracer.start_as_current_span("concatenate_audio_chunks")
+# async def concatenate_audio_chunks(chunks: dict) -> io.BytesIO:
+#     """Concatenate the audio chunks into a single audio file."""
+#     concatenated_audio = io.BytesIO()
+
+#     for chunk_key in chunks:
+#         concatenated_audio.write(chunks[chunk_key]["data"])
+
+#     concatenated_audio.seek(0)
+#     return concatenated_audio  # Return the BytesIO object itself
+
+
+# @tracer.start_as_current_span("create_summary")
+# async def create_summary(
+#     total_transcript: str, token: DecodedToken, tipo_conteudo: str
+# ):
+#     summary = ""
+
+#     try:
+#         _, summary = await gabi_summ(total_transcript, token, tipo_conteudo)
+
+#         logger.info("Conteúdo resumido com sucesso!")
+#     except Exception as e:
+#         traceback.print_exc()
+#         logger.error(f"Erro ao tentar resumir o conteúdo: {e}")
+#         summary = tipo_conteudo, f"Erro ao resumir {e}"
+
+#     return tipo_conteudo, summary
+
+
+# @tracer.start_as_current_span("transcribe_from_memory_to_text")
+# async def transcribe_from_memory_to_text(
+#     audio_content_dict: dict, token: DecodedToken, language: str = "pt"
+# ):
+#     """Transcribe the audio chunks to text."""
+#     logger.info("Inicio do processo de transcrição...")
+
+#     if audio_content_dict:
+#         logger.info("Áudio encontrado. Iniciando a transcrição...")
+
+#         transcriptions = []
+#         total_transcription = ""
+#         total_transcription_time_stamps = ""
+#         start_time = 0
+
+#         logger.info("Iniciando a transcrição dos pedaços de áudio...")
+
+#         whisper = ModelFactory.get_model(
+#             token=token,
+#             model=MODELO_WHISPER,
+#             api_base=configs.AZURE_OPENAI_POC_EASTUS2_ENDPOINT,
+#             api_key=configs.AZURE_OPENAI_POC_EASTUS2_API_KEY,
+#         )
+
+#         for chunk_name, chunk_info in audio_content_dict.items():
+
+#             logger.info(f"Processando {chunk_name}...")
+
+#             # audio_data = chunk_info["path"]
+#             # duration = chunk_info["duration_s"]
+
+#             # buffer = io.BytesIO(audio_data)
+#             # buffer.name = "file.mp3"  # This line is important for the transcription API
+
+#             duration = len(pydub.AudioSegment.from_file(chunk_info["path"])) / 1000
+
+#             # Perform transcription on the chunk
+#             try:
+#                 logger.info(
+#                     f"Transcrevendo {chunk_name}...Duração: {duration / 60:.2f} minutos."
+#                 )
+
+#                 with open(chunk_info["path"], "rb") as buffer:
+#                     transcription = await whisper.audio.transcriptions.create(
+#                         model=MODELO_WHISPER["deployment_name"],
+#                         file=buffer,
+#                         language=language,
+#                         prompt=MINISTROS_TCU,
+#                         response_format="verbose_json",
+#                         timestamp_granularities=["segment"],
+#                         extra_headers={
+#                             "usuario": token.login,
+#                             "desenvol": str(DESENVOLVEDOR in token.roles),
+#                         },
+#                     )
+
+#                 logger.info(
+#                     f"Transcrição para {chunk_name}: {transcription.text[:100]}..."
+#                 )  # Print first 100 characters
+
+#                 transcriptions.append(transcription.text)
+
+#                 time_stamped, text = await format_general_platform_style_captions(
+#                     transcription, duration, start_time=start_time
+#                 )
+
+#                 total_transcription += text
+#                 total_transcription_time_stamps += time_stamped
+#                 start_time += duration
+#             except Exception as e:
+#                 logger.info(f"Erro ao transcrever o pedaçõ {chunk_name}: {e}")
+#             finally:
+#                 # Remover os arquivos temporários após o processamento
+#                 try:
+#                     os.remove(chunk_info["path"])  # Deleta o arquivo temporário
+#                     logger.info(f"Arquivo temporário {chunk_info['path']} removido.")
+#                 except OSError as e:
+#                     logger.error(f"Erro ao remover o arquivo {chunk_info['path']}: {e}")
+
+#         logger.info("Transcrição dos pedaços de áudio concluída.")
+
+#         return total_transcription_time_stamps, total_transcription
+
+#     return "", ""
+
+
+# @tracer.start_as_current_span("save_responses_in_blob")
+# async def save_responses_in_blob(
+#     content,
+#     container: str,
+#     original_blob_name: str,
+#     blob_instance: AzureBlob = AzureBlob(),
+# ):
+#     # Tentar enviar o conteúdo para o Azure Blob
+#     items_filename = []
+
+#     try:
+#         items_filename = await upload_content(
+#             content, container, original_blob_name, blob_instance
+#         )
+
+#         logger.info(
+#             "Conteúdo das respostas da análise das legendas automáticas enviado com sucesso!"
+#         )
+#     except Exception as e:
+#         logger.error(
+#             f"Erro ao enviar o conteúdo das respostas da análise das legendas automáticas para o Azure Blob: {e}"
+#         )
+
+#         items_filename = []
+
+#     return items_filename
+
+
+# @tracer.start_as_current_span("process_audio")
+# async def process_audio(
+#     stream,
+#     language: str,
+#     token: DecodedToken,
+#     original_blob_name: str,
+#     mongo_registry: ItemSistema,
+#     azure_blob_instance: AzureBlob,
+#     upload_container: str = CONTAINER_NAME,
+#     tipo_conteudo="",
+# ):
+#     language = language.lower()
+
+#     try:
+#         # Enviar o áudio para a memória
+#         logger.info("Enviando o áudio para a memória...")
+
+#         # audio = await extract_audio_from_stream(stream=stream)
+
+#         audio_content_dict = await create_audio_chunks(stream)
+
+#         logger.info("Áudio enviado com sucesso!")
+#     except Exception as e:
+#         logger.error(f"Erro ao processar audio: {e}")
+#         return (), f"Erro ao processar audio: {e}."
+
+#     if not audio_content_dict:
+#         logger.info("Falha ao baixar e processar o áudio.")
+
+#         return (), "Nenhum conteúdo de áudio encontrado."
+
+#     try:
+#         total_transcript_with_time_stamps, total_transcript = (
+#             await transcribe_from_memory_to_text(audio_content_dict, token, language)
+#         )
+#     except Exception as e:
+#         logger.error(f"Erro ao transcrever o áudio para texto: {e}")
+#         traceback.print_exc()
+#         return (), f"Erro ao transcrever o áudio para texto: {e}."
+
+#     # Tentar resumir o conteúdo das transcrição gerada
+#     logger.info("Tentando resumir o conteúdo das transcrições")
+
+#     tipo_conteudo, summary = await create_summary(
+#         total_transcript, token, tipo_conteudo
+#     )
+
+#     # audio_data = None
+
+#     # try:
+#     #     logger.info("Concatenando os pedaços de áudio...")
+
+#     #     audio_data = await concatenate_audio_chunks(audio_content_dict)
+
+#     #     logger.info("Pedaços de áudio concatenados com sucesso!")
+#     # except Exception as e:
+#     #     logger.error(f"Erro ao concatenar os pedaços de áudio: {e}")
+#     #     audio_filename = ""
+
+#     # # Se o áudio for concatenado com sucesso, enviar o áudio concatenado para o Azure Blob
+#     # if audio_data:
+#     #     try:
+#     #         # Enviar o áudio concatenado para o Azure Blob
+#     #         logger.info("Enviando o áudio concatenado para o Azure Blob...")
+
+#     #         audio_filename = await name_file(audio_data, "mp3")
+
+#     #         logger.info(f"Filename: {audio_filename}")
+
+#     #         audio_data.seek(
+#     #             0
+#     #         )  # Ensure the BytesIO object is at the beginning before uploading
+
+#     #         await azure_blob_instance.upload_blob(
+#     #             upload_container, audio_filename, audio_data
+#     #         )
+
+#     #         logger.info("Áudio concatenado enviado com sucesso!")
+#     #     except Exception as e:
+#     #         logger.error(f"Erro ao enviar os pedaços de áudio para o Azure Blob: {e}")
+#     #         audio_filename = ""
+
+#     # Preparando a resposta
+#     content = [
+#         ("summary", summary),
+#         ("total_transcript_with_time_stamps", total_transcript_with_time_stamps),
+#         ("total_transcript", total_transcript),
+#     ]
+
+#     # Enviar o conteúdo do processamento da transcrição para o Azure Blob
+#     logger.info(
+#         "Enviando o conteúdo do processamento da transcrição para o Azure Blob..."
+#     )
+
+#     items_filename = await save_responses_in_blob(
+#         content,
+#         upload_container,
+#         original_blob_name,
+#         blob_instance=azure_blob_instance,
+#     )
+
+#     # if tipo_conteudo == "":
+#     #     tipo_conteudo = "general"
+
+#     # gabi_response = (
+#     #     original,
+#     #     [upload_container, audio_filename],
+#     #     tipo_conteudo,
+#     #     summary,
+#     #     [upload_container, items_filename[0]],
+#     #     total_transcript_with_time_stamps,
+#     #     [upload_container, items_filename[1]],
+#     #     total_transcript,
+#     #     [upload_container, items_filename[2]],
+#     # )
+
+#     # return gabi_response, None
+
+#     return GabiResponse(transcript=total_transcript, summary=summary)

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: openai-azure-playground-frontend-deploy
+    namespace: openai-azure
+spec:
+    selector:
+        matchLabels:
+            app: openai-azure-playground-frontend
+            tier: ${module-name}
+    replicas: 3
+    revisionHistoryLimit: 5
+    strategy:
+        rollingUpdate:
+            maxUnavailable: 0
+    template:
+        metadata:
+            labels:
+                app: openai-azure-playground-frontend
+                tier: ${module-name}
+        spec:
+            containers:
+                - name: openai-azure-playground-frontend
+                  image: ${image-name}-${module-name}:${tag-imagem-docker}
+                  resources:
+                      requests:
+                          cpu: 200m
+                          memory: 64Mi
+                      limits:
+                          cpu: 600m
+                          memory: 128Mi
+                  livenessProbe:
+                      httpGet:
+                          path: /
+                          port: app-port
+                      initialDelaySeconds: 5
+                      failureThreshold: 6
+                      periodSeconds: 5
+                      timeoutSeconds: 2
+                  readinessProbe:
+                      httpGet:
+                          path: /
+                          port: app-port
+                      initialDelaySeconds: 5
+                      failureThreshold: 2
+                      periodSeconds: 5
+                      timeoutSeconds: 2
+                  env:
+                      - name: GET_HOSTS_FROM
+                        value: dns
+                      - name: NODE_ENV
+                        value: ${profile}
+                  ports:
+                      - name: app-port
+                        containerPort: 80

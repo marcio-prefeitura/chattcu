@@ -1,0 +1,190 @@
+@import '../../sass/mixins.scss';
+
+.gpt-store-save {
+    display: flex;
+    flex-direction: column;
+    height: calc(-66px + 100vh);
+    overflow-y: visible !important;
+    margin: 0px auto;
+    padding: 1rem 0px;
+
+    .App-dark & {
+        background-color: #212121;
+    }
+
+    &__input-base {
+        display: flex;
+        gap: 12px;
+    }
+
+    &__input-icon {
+        display: flex;
+        gap: 8px;
+    }
+
+    &__main {
+        padding: 0 32px;
+        margin: 0 auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        max-width: 850px;
+        width: 100%;
+    }
+
+    &__scroll {
+        height: 100%;
+        overflow-y: auto;
+        width: 100%;
+        @include barra-de-rolagem;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__box-text {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        gap: 4px;
+    }
+
+    &__logo {
+        text-align: center !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__box-title-subtitle {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 4px;
+    }
+
+    &__textfields,
+    &__bases {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        gap: 16px;
+        background-color: #fff;
+
+        .App-dark & {
+            background-color: #212121;
+        }
+
+        .MuiTextField-root {
+            .MuiOutlinedInput-root {
+                background-color: #fff;
+
+                input {
+                    padding: 12px 16px;
+                    font-size: 12px;
+
+                    &::placeholder {
+                        color: #666;
+                    }
+                }
+            }
+        }
+    }
+
+    &__quebra-gelo {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        gap: 4px;
+        background-color: #fff;
+
+        .App-dark & {
+            background-color: #212121;
+        }
+
+        &-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+    }
+
+    &__title {
+        color: #2D2D2F;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+
+        .App-dark & {
+            color: #cecece;
+        }
+    }
+
+    &__subtitle {
+        font-size: 12px;
+        text-align: left;
+
+        .App-dark & {
+            color: #666;
+        }
+    }
+
+    &__button-upload {
+        & .icon-upload::before {
+            font-size: 20px;
+            text-align: center;
+            color: #3A71C7 !important;
+        }
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .icon-x::before {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        color: #49494b;
+        font-weight: 600;
+
+        .App-dark & {
+            color: #cecece;
+        }
+    }
+
+    &__custom-textfield,
+    .MuiOutlinedInput-root {
+        border-radius: 8px !important;
+        background-color: #fefefe !important;
+        color: #49494b;
+        font-size: 12px !important;
+
+        .App-dark & {
+            background-color: #2f2f2f !important;
+            color: #cecece;
+        }
+    }
+
+    &__box-button {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    &__criar-button {
+        text-transform: none;
+        font-weight: 500 !important;
+        font-size: 12px !important;
+        border-radius: 8px;
+    }
+
+    &__custom-textfield-base {
+        .MuiOutlinedInput-root {
+            height: 44px;
+        }
+    }
+}

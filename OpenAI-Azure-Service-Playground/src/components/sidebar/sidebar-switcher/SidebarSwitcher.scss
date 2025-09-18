@@ -1,0 +1,125 @@
+.new-sidebar-switcher {
+
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        // align-items: flex-start;
+        // padding: 12px;
+        // width: 56px;
+
+        .selected {
+            background-color: #e0ebff !important;
+            min-width: 0;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+
+            .App-dark & {
+                background-color: #2f2f2f !important;
+            }
+        }
+
+        &__button {
+
+            .MuiButton-root,
+            .MuiIconButton-root {
+                min-width: 0 !important;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 8px;
+                border-radius: 8px;
+                width: 100% !important;
+
+                &:hover {
+                    background-color: #f1f5fa !important;
+                }
+
+                .App-dark & {
+                    &:hover {
+                        background-color: #2f2f2f !important;
+                    }
+                }
+            }
+        }
+
+        .icon {
+            &-message-square::before,
+            &-upload::before,
+            &-share,
+            &-archive::before,
+            &-paper-clip::before,
+            &-storefront::before {
+                font-size: 20px;
+                color: #49494b;
+
+                &:hover {
+                    color: #3a71c7;
+                }
+
+                .App-dark & {
+                    color: #ececec !important;
+                }
+            }
+        }
+
+        .divisor {
+            width: 100%;
+            margin-bottom: 5px;
+
+            .App-dark & {
+                border-color: #ececec;
+            }
+        }
+
+        .sidebar-label {
+            display: none;
+        }
+
+        // Telas maiores que 1366px
+        // Apenas para perfil dev em telas maiores
+        &.dev-mode {
+            @media screen and (min-width: 1367px) {
+                // width: 176px;
+
+                .MuiButton-root,
+                .MuiIconButton-root {
+                    width: 100%;
+                    font-size: 12px;
+                    font-weight: 500;
+                    gap: 8px;
+
+                    .sidebar-label {
+                        display: inline-flex;
+                        font-size: 12px;
+                        color: #2d2d2f;
+                        font-weight: 500;
+
+                        .App-dark & {
+                            color: #ececec;
+                        }
+                    }
+                }
+
+                .new-sidebar-switcher__nova-conversa {
+
+                    &--botao {
+                        .sidebar-label {
+                            color: FFF;
+
+                        }
+
+                        & .icon-plus::before {
+                            color: #fff !important;
+                            font-size: 14px;
+                        }
+                    }
+                }
+
+                .selected {
+                    width: 100%;
+                }
+            }
+        }
+}

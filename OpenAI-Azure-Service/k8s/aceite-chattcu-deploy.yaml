@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openai-azure-backend-deploy
+  namespace: openai-azure
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: openai-azure
+      tier: backend
+      team: sesin
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: openai-azure
+        tier: backend
+        team: sesin
+    spec:
+      containers:
+        - name: openai-azure-backend
+          image: ${image-name}-${module-name}:${tag-imagem-docker}
+          resources:
+            requests:
+              cpu: 50m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /api/health/check
+              port: app-port
+            initialDelaySeconds: 20
+            failureThreshold: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /api/health/check
+              port: app-port
+            initialDelaySeconds: 20
+            failureThreshold: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+          env:
+            - name: GET_HOSTS_FROM
+              value: dns
+            - name: PROFILE
+              value: aceite
+            - name: AZURE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: chattcu-aceite
+                  key: AZURE_CLIENT_ID
+            - name: AZURE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: chattcu-aceite
+                  key: AZURE_CLIENT_SECRET
+            - name: AZURE_TENANT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: chattcu-aceite
+                  key: AZURE_TENANT_ID
+          ports:
+            - name: app-port
+              containerPort: 8000
+        

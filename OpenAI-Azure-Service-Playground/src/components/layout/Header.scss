@@ -1,0 +1,203 @@
+@import '../sass/mixins.scss';
+/* ==========================================================================
+   # HEADER
+   ========================================================================== */
+.toolbar {
+    background-color: white !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #e2dfdf !important;
+
+    .App-dark & {
+        background-color: #171717 !important;
+        border-bottom: none !important;
+    }
+
+    &__itens {
+        justify-content: space-between;
+        padding: 0 1rem;
+
+        @media screen and (max-width: 500px) {
+            padding: 0;
+        }
+    }
+
+    &__item-left {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+
+        @media screen and (max-width: 500px) {
+            margin-left: 8px !important;
+        }
+    }
+
+    &__titulo {
+        color: #1a1a1a !important;
+        font-size: 20px !important;
+        font-weight: 500 !important;
+        line-height: 24px !important;
+        text-decoration: none !important;
+
+        .App-dark & {
+            color: #ececec !important;
+        }
+    }
+
+    .MuiAvatar-circular {
+        color: #2d2d2e !important;
+        background-color: #e0e0e0 !important;
+        font-weight: 700;
+        font-size: 14px !important;
+
+        .App-dark & {
+            background-color: #323232 !important;
+            color: #fff !important;
+        }
+    }
+
+    &__dark-login {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .icon-bell::before {
+            color: #000000de;
+            font-size: 20px;
+
+            .App-dark & {
+                color: #ececec !important;
+            }
+        }
+        .dark-mode__icon > svg {
+            font-size: 20px;
+        }
+    }
+
+    &__icon-menu {
+        .App-dark & {
+            color: #ececec;
+        }
+    }
+}
+
+.logo {
+    background-image: url(../../assets/logo-menor.png);
+    background-size: cover;
+    width: 40px;
+    height: 34px;
+
+    .App-dark & {
+        background-image: url(../../assets/logo-tcu-branca.png);
+        width: 40px;
+        height: 32px;
+    }
+}
+
+.avatar-menu {
+    &__icon {
+        .App-dark & {
+            color: #ececec !important;
+        }
+    }
+}
+
+/* ==========================================================================
+   # NOTIFICATION DIALOG
+   ========================================================================== */
+
+.notification-dialog {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 24px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0);
+    border-radius: 8px;
+    max-width: 1000px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    gap: 1rem;
+
+    @include barra-de-rolagem;
+
+    .App-dark & {
+        background-color: #202124;
+        color: #efecf4;
+    }
+
+    &__titulo {
+        color: #1f1f1f;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 500;
+
+        .App-dark & {
+            color: #fff !important;
+        }
+    }
+
+    &__container {
+        display: flex;
+        padding: 24px;
+        flex-direction: column;
+        gap: 16px;
+        border-radius: 8px;
+        background: #f7f7f7;
+
+        .App-dark & {
+            background-color: #212428;
+            color: #c2c2c2;
+        }
+    }
+
+    &__especialista {
+        background-color: #ccc;
+        color: #171717;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+        font-weight: 500;
+        padding: 0.15rem 0.3rem;
+    }
+
+    &__versão {
+        color: #1f1f1f;
+        font-size: 20px;
+        font-weight: 500;
+
+        .App-dark & {
+            color: #fff !important;
+        }
+    }
+
+    &__subtitulo {
+        color: #1f1f1f;
+        font-size: 16px;
+        font-weight: 600;
+
+        .App-dark & {
+            color: #fff !important;
+        }
+    }
+
+    &__lista {
+        display: flex;
+        padding: 0px 32px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__button {
+        display: flex;
+        justify-content: flex-end;
+
+        & > button {
+            text-transform: unset !important;
+        }
+    }
+}

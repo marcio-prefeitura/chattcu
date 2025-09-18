@@ -1,0 +1,69 @@
+.arquivos-ignorados {
+    background-color: #F9F9F9  !important;
+    border-radius: 8px !important;
+    margin: 0 !important;
+
+    .App-dark & {
+        background-color: #252525 !important;
+    }
+
+    &__chip {
+        font-size: 0.7rem !important;
+        font-weight: bold;
+        color: #7E848C !important;
+        border: 1px solid #7E848C !important;
+        background-color: #FFF !important;
+        height: auto !important;
+        min-height: 24px !important;
+        white-space: unset !important;
+
+        .App-dark & {
+            background-color: #121212 !important;
+            color: #e3e3e3 !important;
+        }
+    }
+
+    &__titulo {
+        font-size: 0.83rem !important;
+        color: #1A1A1A !important;
+        margin: 0 !important;
+        font-weight: 500 !important;
+
+        .App-dark & {
+            color: #e3e3e3 !important;
+        }
+    }
+
+    .MuiAccordionDetails-root {
+        padding: 0px 16px 16px !important;
+        display: flex;
+        gap: 0.3rem;
+    }
+
+    .MuiAccordionSummary {
+        &-root {
+            min-height: 40px !important;
+
+            &.Mui-expanded {
+                min-height: 40px !important;
+            }
+        }
+
+        &-content {
+            margin: 0 !important;
+        }
+
+        &-expandIconWrapper {
+            .App-dark & {
+                color: #e3e3e3 !important;
+            }
+        }
+    }
+
+    &.MuiAccordion-root {
+
+        &:before {
+            background-color: transparent !important;
+        }
+    }
+}

@@ -1,0 +1,68 @@
+.folder-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .MuiOutlinedInput-root {
+        .App-dark & {
+            background-color: #2F2F2F !important;
+        }
+    }
+
+    &__button-save {
+        font-size: 20px !important;
+
+        .App-dark & {
+            color: #ececec !important;
+        }
+
+        & .icon-save {
+            font-size: 16px;
+        }
+    }
+}
+
+.folder-field__helper-text-error {
+    color: #E63737 !important; 
+    font-size: 11px !important;
+}
+.input-field-error {
+    border: 1px solid #E63737 !important;  /* Red border when max length is reached */
+}
+// TODO : Verificar o código abaixo
+.css-78trlr-MuiButtonBase-root-MuiIconButton-root.Mui-disabled,
+.css-1yxmbwk.Mui-disabled {
+    .App-dark & {
+        color: #ececec !important;
+    }
+}
+
+.icon-button-enabled {
+    .icon-save::before {
+        color: #3A71C7  !important;
+    }
+    
+    .App-dark & .icon-save::before {
+        color: #88A6FF !important;
+    }
+}
+
+.icon-button-disabled {
+    .icon-save::before {
+        color: #CECECE !important;
+    }
+    
+    .App-dark & .icon-save::before {
+        color: #CECECE !important;
+    }
+}
+
+.icon-x {
+    // width: 16px;
+    // height: 16px;
+    // display: inline-block;
+    // background-size: contain;
+    font-size: 16px;
+    // line-height: 16px;
+    // margin-right: 4px;
+}

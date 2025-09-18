@@ -1,0 +1,43 @@
+.icon-thumbs-up,
+.icon-thumbs-down {
+    font-size: 16px;
+    color: #101828;
+
+    .App-dark & {
+        color: #c4c7c5;
+    }
+}
+
+.liked__button-selecionado,
+.disliked__button-selecionado {
+    background-color: #F1F5FA !important;
+
+    .App-dark & {
+        background-color: #273039 !important;
+    }
+
+    .icon-thumbs-up,
+    .icon-thumbs-down {
+        color: #3A71C7 !important;
+
+        .App-dark & {
+            color: #88A6FF !important;
+        }
+    }
+}
+
+.message-copy {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-bottom: 16px;
+
+    &__copy {
+        color: #101828;
+        font-size: 16px !important;
+
+        .App-dark & {
+            color: #c4c7c5;
+        }
+    }
+}

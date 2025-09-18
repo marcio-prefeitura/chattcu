@@ -1,0 +1,290 @@
+.select-agent {
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (max-width: 900px) {
+        padding-top: 0.75rem;
+    }
+
+    @media screen and (max-width: 526px) {
+        padding-top: 0px;
+    }
+
+    .icon-chat-tcu::before,
+    .icon-globe::before,
+    .icon-jurisprudencia::before,
+    .icon-sistema-casa::before,
+    .icon-e-tcu::before,
+    .icon-standard::before {
+        font-size: 18px;
+        color: #3a71c7;
+        margin-right: 4px;
+
+        .App-dark & {
+            color: #cecece;
+        }
+    }
+
+    &__model-box {
+        border: 1.5px solid #3a71c7 !important;
+        border-radius: 6px !important;
+
+        .App-dark & {
+            border: 1.5px solid #cecece !important;
+            background-color: #2f2f2f;
+        }
+
+        &.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        & .icon-chat-gpt {
+            font-size: 15px;
+            color: #3a71c7;
+
+            @media screen and (max-width: 500px) {
+                display: none !important;
+            }
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+
+        & .icon-claude {
+            font-size: 15px;
+
+            @media screen and (max-width: 500px) {
+                display: none !important;
+            }
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+
+        .select-agent__restore-agent.Mui-disabled {
+            .icon-x {
+                opacity: 0.5 !important;
+            }
+        }
+    }
+
+    &__button {
+        color: #3a71c7 !important;
+        text-transform: unset !important;
+        border-radius: 8px !important;
+        background: #fff !important;
+        font-weight: 500 !important;
+        font-size: 12px !important;
+        padding-right: 12px !important;
+        display: flex;
+
+        & > span {
+            @media screen and (max-width: 500px) {
+                max-width: 110px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+        }
+
+        &:disabled {
+            .App-dark & {
+                color: rgba(255, 255, 255, 0.3) !important;
+            }
+        }
+
+        .App-dark & {
+            color: #cecece !important;
+            background-color: #2f2f2f !important;
+        }
+    }
+
+    &__button-model {
+        color: #3a71c7 !important;
+        text-transform: unset !important;
+        font-weight: 500 !important;
+        font-size: 12px !important;
+        padding-left: 0 !important;
+        display: flex;
+
+        & > span {
+            @media screen and (max-width: 500px) {
+                max-width: 72px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+        }
+
+        &:disabled {
+            color: rgba(0, 0, 0, 0.26) !important;
+
+            .App-dark & {
+                color: rgba(255, 255, 255, 0.3) !important;
+            }
+        }
+
+        .App-dark & {
+            color: #cecece !important;
+            border-radius: 8px;
+        }
+    }
+
+    &__title {
+        color: #121212 !important;
+        line-height: 40px !important;
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+
+        .App-dark & {
+            color: #cecece !important;
+            background-color: #2f2f2f !important;
+        }
+    }
+
+    &__list {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        gap: 4px;
+        display: flex;
+        flex-direction: column;
+
+        &-item {
+            gap: 12px;
+        }
+
+        .list-agent__list-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .list-agent__list-descricao {
+            font-size: 12px;
+            color: #828282;
+        }
+
+        .list-agent__list-name {
+            font-size: 12px;
+            color: #828282;
+        }
+
+        .list-agent__list-item-nome {
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+        }
+
+        .list-agent__list-beta {
+            align-items: center;
+            background: #ffe6cf;
+            border-radius: 13px;
+            color: #66380f;
+            display: flex;
+            font-size: 11px;
+            font-weight: 700;
+            width: 40px;
+            height: 18px;
+            justify-content: center;
+            padding: 1px 11px;
+        }
+
+        .list-agent__list-box-beta {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .list-agent__list-box-descricao {
+            gap: 0px !important;
+            display: flex;
+            flex-direction: column;
+        }
+
+        & .list-agent__list-item-icone {
+            display: flex;
+            width: 30px;
+            height: 30px;
+            background-color: #f2f2f2 !important;
+            border-radius: 8px;
+            align-items: center;
+            justify-content: center;
+            color: #49494b;
+
+            .App-dark & {
+                color: #cecece !important;
+                background-color: #212121 !important;
+            }
+
+            .icon-chat-gpt {
+                font-size: 20px;
+            }
+        }
+
+        .list-agent__list-item-nome > span {
+            font-size: 14px;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            width: 80vw !important;
+        }
+
+        .MuiListItemIcon-root {
+            min-width: 30px !important;
+        }
+    }
+
+    &__especialista {
+        font-size: 10px;
+        align-content: flex-start;
+        display: flex;
+        margin-bottom: 2px;
+        color: #767676;
+    }
+
+    &__restore-agent {
+        color: #3a71c7 !important;
+        text-transform: unset !important;
+        border-radius: 8px !important;
+        border-left: 1.5px solid #3a71c7 !important;
+        background: #fff !important;
+        font-size: 13px !important;
+        border-top-right-radius: 10px !important;
+        border-bottom-right-radius: 10px !important;
+        border-top-left-radius: 0px !important;
+        border-bottom-left-radius: 0px !important;
+        margin-left: -6px !important;
+        padding: 9.5px !important;
+
+        .App-dark & {
+            border-left: 1.5px solid #cecece !important;
+            color: #cecece !important;
+            background-color: #2f2f2f !important;
+        }
+
+        & .icon-x::before {
+            font-size: 14px;
+            color: #3a71c7 !important;
+
+            .App-dark & {
+                color: #cecece !important;
+            }
+        }
+
+        &:disabled {
+            color: rgba(0, 0, 0, 0.26) !important;
+
+            .App-dark & {
+                color: rgba(255, 255, 255, 0.3) !important;
+                border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            }
+        }
+    }
+}

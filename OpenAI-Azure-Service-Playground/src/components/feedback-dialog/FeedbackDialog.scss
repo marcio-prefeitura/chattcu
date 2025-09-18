@@ -1,0 +1,224 @@
+@import '../sass/mixins.scss';
+
+.feedback {
+    display: flex;
+    max-width: 527px;
+    width: 100%;
+    border-radius: 14px;
+    background-color: #F9F9F9 ;
+    padding: 1rem;
+    margin-top: 10px;
+    max-height: 800px;
+    border: 1px solid #E5E7EB;
+
+    .App-dark & {
+        background-color: #202124;
+        color: #cecece;
+    }
+
+    @media screen and (max-width:600px) {
+        width: auto;
+
+        &__botao--confirmar {
+            white-space: nowrap !important;
+            min-width: 130px !important;
+        }
+
+        &__botao--cancelar {
+            min-width: 85px !important;
+        }
+    }
+
+    &__icone-close {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 12px;
+
+        & .icon-x {
+            font-size: 24px;
+            color: #667085;
+
+            .App-dark & {
+                color: #cecece;
+            }
+        }
+    }
+
+    &__box {
+        padding: 0 !important;
+
+        &--text {
+            margin-top: 4px !important;
+            color: #7E848C !important;
+            font-size: 11px !important;
+            text-align: start !important;
+
+            .App-dark & {
+                color: #CCC !important;
+            }
+        }
+    }
+
+    & .MuiOutlinedInput-root {
+        .App-dark & {
+            background-color: #171717;
+            color: #ececec;
+        }
+    }
+
+    /* Estilo para remover a borda do TextField outlined quando não estiver focado */
+    & .MuiOutlinedInput-root:not(.Mui-focused) .MuiOutlinedInput-notchedOutline {
+
+        .App-dark & {
+            border: 1px solid #6d6d6d !important;
+        }
+    }
+
+    /* Estilo para adicionar a borda ao passar o mouse */
+    & .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+        .App-dark & {
+            border: 1px solid #3f51b5 !important;
+        }
+    }
+
+    /* Estilo para adicionar a borda quando estiver focado */
+    & .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+        .App-dark & {
+            border: 2px solid #3f51b5 !important;
+        }
+
+        /* Cor azul padrão do Material-UI para borda em foco */
+    }
+
+    &__box-informacoes {
+        font-style: normal;
+        font-weight: 500 !important;
+        font-size: 16px !important;
+        line-height: 120% !important;
+    }
+
+    &__checkbox {
+
+        .MuiTypography-root {
+            font-size: .9rem;
+        }
+
+        .MuiCheckbox-root {
+            .App-dark & {
+                color: #e3e3e3 !important;
+            }
+
+            &.Mui-checked {
+                .App-dark & {
+                    color: #88A6FF !important;
+                }
+            }
+        }
+    }
+
+    &__main {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    &__botao-action {
+        gap: 8px;
+        display: flex;
+        justify-content: flex-end;
+
+        &--cancelar {
+            border-color: #a7a7a7 !important;
+            color: #344054 !important;
+            text-transform: unset !important;
+
+            .App-dark & {
+                color: #cecece !important;
+                border-color: #cecece !important;
+            }
+        }
+
+        &--confirmar {
+            text-transform: unset !important;
+
+            &:disabled{
+            text-transform: unset !important;
+
+            .App-dark & {
+              background-color: #2E3237 !important;
+              color: #ffffff4d;
+            }
+          }
+        }
+    }
+
+    .MuiOutlinedInput-input {
+        font-size: 14px;
+
+        &:disabled{
+            .App-dark & {
+            color: #ffffff4d !important;
+            -webkit-text-fill-color: unset !important;
+          }
+        }
+    }
+
+    .MuiCheckbox-root {
+        padding: 6px 8px;
+    }
+}
+
+.teste {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.feedback__button-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.feedback__textfield {
+    margin-bottom: 16px;
+}
+
+// .MuiButton-outlined{
+//     color: #344054 !important;
+// }
+
+.no-capitalization {
+    text-transform: none;
+    border-radius: 4px;
+    border: 1px solid var(--Neutra-Medium, #B9C1CC) !important;
+    //color: var(--Neutra-Darkest, #1A1A1A) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+
+    &:hover{
+        background-color: #3A71C7 !important;
+        color: #fff !important;
+
+        .App-dark & {
+            color: rgba(0, 0, 0, 0.87) !important;
+            background-color: #88A6FF !important;
+          }
+    }
+
+    .App-dark & {
+        text-transform: unset !important;
+        color: #fff !important;
+    }
+}
+.MuiButton-contained{
+    .App-dark & {
+        color: rgba(0, 0, 0, 0.87) !important;
+    }
+}
+
+

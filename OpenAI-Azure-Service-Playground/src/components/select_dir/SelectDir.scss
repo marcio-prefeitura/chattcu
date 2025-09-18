@@ -1,0 +1,22 @@
+.filter-field {
+    margin-bottom: 12px !important;
+    font-size: 12px !important;
+}
+
+.select-dir {
+    max-width: 380px !important;
+    .MuiSelect-icon {
+        .App-dark & {
+            color: #efecf4 !important;
+        }
+    }
+}
+
+.select-dir-new {
+    width: 220px !important;
+    .MuiSelect-icon {
+        .App-dark & {
+            color: #efecf4 !important;
+        }
+    }
+}

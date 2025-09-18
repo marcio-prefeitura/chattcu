@@ -1,0 +1,202 @@
+@import 'src/components/sass/mixins';
+
+.box-outter {
+  padding: 10px 0px 10px 10px;
+}
+
+.trecho {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  border-radius: 14px;
+  background-color: #F9F9F9 ;
+  padding: 1rem;
+  margin-top: 10px;
+  max-height: 800px;
+  border: 1px solid #E5E7EB;
+
+  &__link {
+    color: #0680F9;
+    font-size: 12px !important;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  &__linha {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+  }
+
+  & .icon-x {
+    font-size: 18px;
+    color: #5f6368;
+  }
+
+  &__divider {
+    margin: 1rem 0 !important;
+    height: 0.5px;
+    background-color: #B6B6B7;
+  }
+
+  & sup {
+    display: flex !important;
+    padding: 2px 5px !important;
+    height: 17px !important;
+    width: auto !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-radius: 4px !important;
+    border: 0.5px solid #B9C1CC !important;
+    background-color: #FFF !important;
+    color: #454343 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+
+
+    .App-dark & {
+      background-color: #202124;
+      color: #cecece;
+    }
+  }
+
+  .App-dark & {
+    background-color: #202124;
+    color: #cecece;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__titulo {
+    font-size: 0.950rem !important;
+    font-weight: 700 !important;
+    line-height: 2rem !important;
+    letter-spacing: normal;
+    padding: 0px 0px 0px 3px !important;
+    color: #454343 !important;
+
+    .App-dark & {
+      color: #cecece !important;
+    }
+  }
+
+  &__box {
+    @include barra-de-rolagem;
+    padding: 0 !important;
+    overflow: auto;
+    overflow-y: auto;
+    max-height: 300px;
+
+    &--text {
+      font-size: .875rem !important;
+      font-weight: 400;
+      line-height: 1.25rem;
+      letter-spacing: normal;
+      color: #4F4F4F !important;
+
+      .App-dark & {
+        color: #ececec !important
+      }
+    }
+  }
+
+  &__texto {
+    color: #202124 !important;
+
+    .App-dark & {
+      color: #cecece !important;
+    }
+  }
+
+  &__box-botao {
+    gap: 8px;
+    display: flex;
+    justify-content: flex-end;
+
+    & .icon-download {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    &--download {
+      align-items: center;
+      gap: 4px;
+      display: flex;
+      max-width: 129px;
+      max-height: 40.5px;
+
+      .App-dark & {
+        color: #cecece !important;
+        border-color: #cecece !important;
+        margin-right: auto;
+      }
+    }
+
+    &--botao {
+      .App-dark & {
+        color: #cecece !important;
+        border-color: #cecece !important;
+      }
+    }
+
+    &--progress {
+      margin-top: 10px;
+    }
+  }
+
+  &-file__box-botao {
+    gap: 8px;
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
+
+
+    & .icon-download {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    &--download {
+      border-radius: 8px !important;
+      border: 1px solid #D0D5DD !important;
+      background: #FFF !important;
+      box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05) !important;
+      font-size: 12px !important;
+      color: #344054 !important;
+      gap: 8px;
+      padding: 4px 8px !important;
+
+      .App-dark & {
+        color: #cecece !important;
+        border-color: #cecece !important;
+        //margin-right: auto;
+        background-color: #212121 !important;
+        text-transform: unset !important;
+      }
+    }
+
+    &--botao {
+      .App-dark & {
+        color: #cecece !important;
+        border-color: #cecece !important;
+      }
+    }
+
+    &--progress {
+      margin-top: 10px;
+    }
+  }
+
+}
+
+.MuiCircularProgress-svg {
+  height: 16px;
+  width: 16px;
+}

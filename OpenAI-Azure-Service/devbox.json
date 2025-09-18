@@ -1,0 +1,19 @@
+{
+  "packages": [
+    "python3@3.12",
+    "github:NixOS/nixpkgs/nixpkgs-unstable#stdenv.cc.cc.lib"
+  ],
+  "shell": {
+    "init_hook": [
+      ". $VENV_DIR/bin/activate",
+      "export PROFILE=local",
+      "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DEVBOX_PACKAGES_DIR/lib"
+    ],
+    "scripts": {
+      "init": [
+        "pip install -r requirements_test.txt",
+        "pre-commit install"
+      ]
+    }
+  }
+}

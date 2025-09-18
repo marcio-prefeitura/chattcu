@@ -1,0 +1,33 @@
+.file-actions {
+
+    &__limpar-conversa {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+
+        & span {
+            &::before{
+                .App-dark & {
+                    color: #cecece !important
+                }
+            }
+        }
+    }
+
+    &__texto {
+        font-size: 14px !important;
+    }
+
+    &__tres-pontos-upload {
+        font-size: 14px !important;
+        color: #b6b6b7;
+
+        &:hover {
+           color: #717172;
+        }
+
+        .App-dark & {
+            color: #cecece !important
+        }
+    }
+}

@@ -1,0 +1,13 @@
+.linear-progress-with-label-container{
+    display: flex;
+    align-items: center;
+}
+
+.linear-progress-with-label-container .linear-progress-with-label-container-progress{
+    flex:1;
+    margin-right: 4px;
+}
+
+.linear-progress-with-label-container .linear-progress-with-label-container-label {
+    min-width: 35px;
+}

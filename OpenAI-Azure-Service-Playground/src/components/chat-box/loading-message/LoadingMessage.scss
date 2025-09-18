@@ -1,0 +1,16 @@
+@keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+}
+
+.circle {
+    width: 5px;
+    height: 15px;
+    background-color: lightgray;
+    color: transparent;
+    animation: blink 0.3s infinite;
+}

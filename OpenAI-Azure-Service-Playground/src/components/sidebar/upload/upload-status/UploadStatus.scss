@@ -1,0 +1,13 @@
+.upload-status {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    margin-bottom: 1rem;
+
+    &__titulo {
+        color: #676767;
+        text-align: center;
+        font-size: 12px !important;
+        display: flex;
+    }
+}

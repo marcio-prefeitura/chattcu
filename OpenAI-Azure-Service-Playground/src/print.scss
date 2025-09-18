@@ -1,0 +1,82 @@
+@media print {
+
+  /* Escondendo objetos que não devem aparecer na impressão */
+  nav,
+  footer,
+  video,
+  audio,
+  object,
+  embed,
+  .chat-box__bloco-input,
+  .sidebar,
+  .chat-box__botao-rolagem,
+  .toolbar,
+  .message-item__icones-texto,
+  .highlighter__icon,
+  .chat-box__divisor {
+    display: none !important;
+  }
+
+  /* Ajuste de conteúdo para ser exibido na impressão */
+  body,
+  .chat-box__container,
+  .chat-box {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Personalizando links */
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  /* Mudança na cor da logo para melhorar a exibição na impressão */
+  .App-dark {
+    background-color: #FFF !important;
+
+    .img-robo>svg path {
+      fill: #1449e5 !important;
+    }
+
+    .box-img-message .MuiAvatar-circular {
+      background-color: #323232 !important;
+      color: #FFF !important;
+    }
+
+    .message-item__historico,
+    .message-item__base {
+      border: 0.01px solid #20222654 !important;
+      color: #000000 !important;
+    }
+
+    .message-item__base {
+      color: #3A71C7 !important;
+      border: 1px solid #3A71C7 !important;
+    }
+
+    .message-item.response p,
+    .box-paragrafo-robo-p,
+    .box-paragrafo-robo,
+    pre.highlighter__custom,
+    .highlighter__language,
+    .message-item.response,
+    .chat-box,
+    .message,
+    .highlighter,
+    .highlighter__header,
+    .tooltip-indice sup {
+      color: #000000 !important;
+      background-color: #FFFFFF !important;
+    }
+
+    .highlighter {
+      border: 1px solid #20222654;
+      border-radius: 22px;
+    }
+
+    .highlighter__header {
+      border-bottom: 1px solid #20222654;
+    }
+  }
+}

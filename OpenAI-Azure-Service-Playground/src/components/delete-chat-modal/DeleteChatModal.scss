@@ -1,0 +1,114 @@
+@import '../sass/mixins.scss';
+//importando o mixin da pastas sass
+
+.delete-modal {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #FFF;
+  padding: 24px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-radius: 12px;
+  max-width: 544px;
+  width: 100%;
+  gap: 1rem;
+
+  .App-dark & {
+    background-color: #202124;
+    color: #cecece;
+  }
+
+  &__titulo {
+    font-weight: 600 !important;
+    font-size: 18px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  &__icone-close {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    width: 100%;
+    gap: 12px;
+    align-items: flex-start;
+
+    & .icon-x{
+      .App-dark & {
+        color: #E3E3E3 !important;
+      }
+    }
+  }
+
+  &__box-icone-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .App-dark & {
+      color: #E3E3E3;
+    }
+
+    & .icon-trash {
+      font-size: 18px;
+      display: flex;
+      width: 48px;
+      height: 48px;
+      padding: 12px;
+      justify-content: center;
+      align-items: center;
+      border-radius: 28px;
+      border: 8px solid #F9FAFB;
+      background: #F2F4F7;
+
+      .App-dark & {
+        background-color: #171717;
+        border: 8px solid #171717;
+        color: #88A6FF;
+      }
+    }
+  }
+
+  &__texto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 4px;
+  }
+
+  &__box {
+    padding: 0 !important;
+
+    &--text {
+      font-size: 14px !important;
+      line-height: 20px;
+      color: #475467 !important;
+      padding: 0 !important;
+
+      .App-dark & {
+        color: #CCC !important;
+      }
+    }
+  }
+
+  &__botao {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+    display: flex;
+
+    & button{
+      text-transform: unset !important;
+    }
+
+    &--cancelar {
+      border-color: #a7a7a7 !important;
+      color: #344054 !important;
+    }
+  }
+}

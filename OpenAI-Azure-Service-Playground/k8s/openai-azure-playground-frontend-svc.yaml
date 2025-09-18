@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: openai-azure-playground-frontend-svc
+    namespace: openai-azure
+    labels:
+        app: openai-azure-playground-frontend
+        tier: frontend
+spec:
+    type: ClusterIP
+    ports:
+        - port: 80
+          targetPort: 80
+          name: http
+    selector:
+        app: openai-azure-playground-frontend
+        tier: frontend

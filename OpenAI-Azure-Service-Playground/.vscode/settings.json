@@ -1,0 +1,27 @@
+{
+    "editor.formatOnSave": true,
+    "prettier.requireConfig": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "jest.autoRun": "off",
+	"debug.onTaskErrors": "abort",
+	"json.schemas": [
+        {
+            "fileMatch": [
+                "/aad.*.json"
+            ],
+            "schema": {}
+        }
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#11350B",
+        "titleBar.activeBackground": "#184A10",
+        "titleBar.activeForeground": "#F5FDF4"
+    },
+    "sonarlint.connectedMode.project": {
+        "connectionId": "http-sonar-cpic-tcu-gov-br",
+        "projectKey": "br.gov.tcu.apps:openai-azure-service-playground"
+    },
+    "coverage-gutters.lcovpath": "coverage/lcov.info"
+}

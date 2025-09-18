@@ -1,0 +1,242 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent any
+
+    environment {
+        GIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        COMMITER_NAME = sh(script: 'git show -s --pretty=%an', returnStdout: true).trim()
+        COMMITER_EMAIL = sh(script: 'git show -s --format=%ae', returnStdout: true).trim()
+        COMMITER_COMMENT = sh(script: 'git show -s --pretty=%B', returnStdout: true).trim()
+
+        TEAMS_HOOK = 'https://tcucloud.webhook.office.com/webhookb2/4c2bc8d8-84dd-47d4-aafa-7d52ae9d0f48@bf158188-9a11-44c2-b7fc-21e85613ba27/JenkinsCI/576057dc0eb347dfac0646028fee8c28/191fe4e5-7f0b-40e7-919d-786a8dfc7d07'
+        NODE_IMAGE = 'node:18.14-bullseye-slim'
+        LAST_STAGE_RUN = 'Inicializando Build'
+
+        DOCKER_REG_CREDS = credentials 'docker-registry'
+        K8S_DEV_CREDENTIALS = credentials 'k8s-desenvol'
+        K8S_PROD_CREDENTIALS = credentials 'k8s-producao'
+
+        IMAGE_NAME = 'registry.rancher.tcu.gov.br/aplicacoes/openai-azure-playground'
+        MODULE_NAME = 'frontend'
+        PROJECT_NAME = 'openai-azure-playground'
+
+        TEAMSAPP_ENV_NAME = 'prod'
+        TEAMSAPP_IMAGE_NAME = "${IMAGE_NAME}-teamsapp"
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+        disableConcurrentBuilds()
+        skipStagesAfterUnstable()
+        timeout(time: 30, unit: 'MINUTES')
+        parallelsAlwaysFailFast()
+        gitLabConnection('jenkins-gitlab')
+    }
+
+    stages {
+        stage('Install Project Dependencies') {
+            agent { docker { image NODE_IMAGE; reuseNode true } }
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                sh 'npm ci'
+            }
+        }
+
+        stage('Unit Testing & Coverage') {
+            agent { docker { image NODE_IMAGE; reuseNode true } }
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                sh 'npm run test:ci'
+            }
+        }
+
+        stage('Sonarqube') {
+            agent { docker { image NODE_IMAGE; reuseNode true } }
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                withSonarQubeEnv(credentialsId: 'sonar-jenkins-token', installationName: 'SonarTCU') {
+                    sh 'npm run sonarqube'
+                }
+            }
+        }
+
+        stage('Build Artifacts') {
+            agent { docker { image NODE_IMAGE; reuseNode true } }
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                sh 'npm run build'
+            }
+        }
+
+        stage('Create Docker Image') {
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                buildAndPushDockerImage()
+            }
+        }
+
+        /* stage('DESENVOL: Create/Update K8s Namespace') {
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                createK8sNs('dev')
+            }
+        }
+
+        stage('DESENVOL: Create/Update K8s Objects') {
+            steps {
+                    script { LAST_STAGE_RUN = env.STAGE_NAME }
+                    updateK8s('dev')
+                    tagAndPushDockerImageForEnvironment('desenvol')
+            }
+        } */
+
+        stage('PRODUÇÃO: Create/Update K8s Namespace') {
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                createK8sNs('prod')
+            }
+        }
+
+        stage('PRODUÇÃO: Create/Update K8s Objects') {
+            steps {
+                script { LAST_STAGE_RUN = env.STAGE_NAME }
+                updateK8s('prod')
+                tagAndPushDockerImageForEnvironment('producao')
+            }
+        }
+
+        stage('PRODUÇÃO: Create Teamsapp Docker Image') {
+            when {
+                changeset pattern: 'cicd/Dockerfile'
+            }
+            steps {
+                sh 'echo $DOCKER_REG_CREDS_PSW | docker login -u $DOCKER_REG_CREDS_USR --password-stdin registry.rancher.tcu.gov.br'
+                sh "docker build -t ${TEAMSAPP_IMAGE_NAME} -f cicd/Dockerfile cicd"
+                sh "docker push ${TEAMSAPP_IMAGE_NAME}"
+            }
+        }
+
+        stage('PRODUÇÃO: Teamsapp Deploy') {
+            agent { docker { image TEAMSAPP_IMAGE_NAME; reuseNode true } }
+            steps {
+                withVault([
+                  vaultSecrets: [[
+                    path         : 'cpic/azure/service-principals/chattcu',
+                    engineVersion: 2,
+                    secretValues : [
+                      [
+                        vaultKey: 'AZURE_CLIENT_ID',
+                        envVar: 'AZURE_CLIENT_ID'
+                      ],
+                      [
+                        vaultKey: 'AZURE_CLIENT_SECRET',
+                        envVar: 'AZURE_CLIENT_SECRET'
+                      ],
+                      [
+                        vaultKey: 'AZURE_TENANT_ID',
+                        envVar: 'AZURE_TENANT_ID'
+                      ]
+                    ]
+                  ]]
+                ]) {
+                    sh 'teamsapp account login azure --service-principal --interactive false --username ${AZURE_CLIENT_ID} --password ${AZURE_CLIENT_SECRET} --tenant ${AZURE_TENANT_ID}'
+                    sh 'teamsapp deploy --interactive false --env ${TEAMSAPP_ENV_NAME}'
+                }
+            }
+        }
+
+        stage('PRODUÇÃO: Teamsapp Publish') {
+            when {
+                changeset pattern: 'env/.env.prod'
+            }
+            agent { docker { image TEAMSAPP_IMAGE_NAME; reuseNode true } }
+            environment {
+                CI_ENABLED = true
+                APP_ID = '1a24ec1b-8129-4120-89c3-bc0d68a0414d'
+                KEY_VAULT_NAME = 'kv-chattcu-prod'
+            }
+            steps {
+                withVault([
+                vaultSecrets: [[
+                    path         : 'cpic/azure/service-principals/chattcu',
+                    engineVersion: 2,
+                    secretValues : [
+                      [
+                        vaultKey: 'AZURE_CLIENT_ID',
+                        envVar: 'AZURE_CLIENT_ID'
+                      ],
+                      [
+                        vaultKey: 'AZURE_CLIENT_SECRET',
+                        envVar: 'AZURE_CLIENT_SECRET'
+                      ],
+                      [
+                        vaultKey: 'AZURE_TENANT_ID',
+                        envVar: 'AZURE_TENANT_ID'
+                      ]
+                    ]
+                  ]]
+              ]) {
+                    catchError(buildResult:'SUCCESS', stageResult:'SUCCESS') {
+                        sh 'teamsapp package --interactive false --env ${TEAMSAPP_ENV_NAME}'
+                        sh 'python cicd/main.py'
+                    }
+              }
+            }
+        }
+    }
+
+    post {
+        success {
+            office365ConnectorSend message: "Novo deploy <br />Committer: <b>${COMMITER_NAME} - ${COMMITER_EMAIL} </b> <br />Comment: <b>${COMMITER_COMMENT}</b> <br />Hash: <b>${GIT_HASH}</b>",
+                    color: '00FF00', status: currentBuild.result,  webhookUrl: TEAMS_HOOK
+        }
+        failure {
+            office365ConnectorSend message: "Build FALHOU no stage <b>${LAST_STAGE_RUN}</b> <br />Committer: <b>${COMMITER_NAME} - ${COMMITER_EMAIL}</b> <br />Comment: <b>${COMMITER_COMMENT}</b> <br />Hash: <b>${GIT_HASH}</b>",
+                    color: '#FF0000', status: currentBuild.result,  webhookUrl: TEAMS_HOOK
+        }
+        unstable {
+            office365ConnectorSend message: "Build INSTÁVEL no stage <b>${LAST_STAGE_RUN}</b> <br />Committer: <b>${COMMITER_NAME} - ${COMMITER_EMAIL}</b> <br />Comment: <b>${COMMITER_COMMENT}</b> <br />Hash: <b>${GIT_HASH}</b>",
+                    color: '#FFFF00', status: currentBuild.result,  webhookUrl: TEAMS_HOOK
+        }
+    }
+}
+
+def buildAndPushDockerImage() {
+    sh 'echo $DOCKER_REG_CREDS_PSW | docker login -u $DOCKER_REG_CREDS_USR --password-stdin registry.rancher.tcu.gov.br'
+    sh "docker build -t ${IMAGE_NAME}-${MODULE_NAME}:${GIT_HASH} . "
+    sh "docker push ${IMAGE_NAME}-${MODULE_NAME}:${GIT_HASH}"
+}
+
+def createK8sNs(environment) {
+    sh "kubectl apply -f k8s/openai-azure-playground-ns.yaml --kubeconfig ${k8sCredentials(environment)}"
+}
+
+def updateK8s(environment) {
+    sh "sed s/\\\${tag-imagem-docker}/${GIT_HASH}/g k8s/${PROJECT_NAME}-${MODULE_NAME}-deploy.yaml | sed s~\\\${image-name}~${IMAGE_NAME}~g | sed s/\\\${module-name}/${MODULE_NAME}/g | sed s/\\\${profile}/${profile(environment)}/g | kubectl apply --kubeconfig ${k8sCredentials(environment)} -f -"
+    sh "sed s/\\\${module-name}/${MODULE_NAME}/g k8s/${PROJECT_NAME}-${MODULE_NAME}-svc.yaml | kubectl apply --kubeconfig ${k8sCredentials(environment)} -f -"
+    sh "sed s/\\\${ambiente}/${ambiente(environment)}/g k8s/${PROJECT_NAME}-${MODULE_NAME}-ing.yaml | kubectl apply --kubeconfig ${k8sCredentials(environment)} -f -"
+    testRolloutSuccess(environment)
+}
+
+def testRolloutSuccess(environment) {
+    def TIMEOUT = '10m'
+    sh "kubectl rollout status deployment.apps/${PROJECT_NAME}-${MODULE_NAME}-deploy --timeout ${TIMEOUT} -n openai-azure --kubeconfig ${k8sCredentials(environment)}"
+}
+
+def tagAndPushDockerImageForEnvironment(environment) {
+    sh "docker tag  ${IMAGE_NAME}-${MODULE_NAME}:${GIT_HASH}  ${IMAGE_NAME}-${MODULE_NAME}:${environment}"
+    sh "docker push  ${IMAGE_NAME}-${MODULE_NAME}:${environment}"
+}
+
+def k8sCredentials(environment) {
+    return [dev: K8S_DEV_CREDENTIALS, prod: K8S_PROD_CREDENTIALS][environment]
+}
+
+static profile(environment) {
+    return [dev: 'development', prod: 'production'][environment]
+}
+
+static ambiente(environment) {
+    return [dev: 'desenvol', prod: 'producao'][environment]
+}

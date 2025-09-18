@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openai-azure-backend-deploy
+  namespace: openai-azure
+spec:
+  replicas: 40
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: openai-azure
+      tier: backend
+      team: sesin
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: openai-azure
+        tier: backend
+        team: sesin
+    spec:
+      containers:
+        - name: openai-azure-backend
+          image: ${image-name}-${module-name}:${tag-imagem-docker}
+          resources:
+            requests:
+              cpu: 50m
+              memory: 4Gi
+            limits:
+              cpu: 1000m
+              memory: 4Gi
+          livenessProbe:
+            httpGet:
+              path: /api/health/check
+              port: app-port
+            initialDelaySeconds: 20
+            failureThreshold: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /api/health/check
+              port: app-port
+            initialDelaySeconds: 20
+            failureThreshold: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+          env:
+            - name: GET_HOSTS_FROM
+              value: dns
+            - name: PROFILE
+              value: ${profile}
+            - name: NEW_RELIC_CONFIG_FILE
+              value: newrelic.ini
+            - name: NEW_RELIC_ENVIRONMENT
+              value: ${profile}
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: newrelic-secret
+                  key: NEW_RELIC_LICENSE_KEY
+
+          ports:
+            - name: app-port
+              containerPort: 8000

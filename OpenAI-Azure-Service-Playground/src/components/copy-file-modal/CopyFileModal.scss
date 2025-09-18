@@ -1,0 +1,186 @@
+@import '../sass/mixins.scss';
+
+//importando o mixin da pastas sass
+.list-select {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  display: block !important;
+  max-width: 480px;
+  width: 100%;
+}
+
+.copy-file-modal {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #FFF;
+  padding: 24px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-radius: 12px;
+  max-width: 544px;
+  width: 100%;
+  gap: 1rem;
+
+  .App-dark & {
+    background-color: #202124;
+    color: #cecece;
+  }
+
+  &__titulo {
+    font-weight: 600 !important;
+    font-size: 18px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  &__icone-close {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    width: 100%;
+    gap: 12px;
+    align-items: flex-start;
+
+    .icon-x{
+      .App-dark & {
+        color: #efecf4 !important;
+      }
+    }
+  }
+
+  .MuiOutlinedInput-input {
+    .App-dark & {
+      background-color: #171717 !important;
+      color: #efecf4 !important;
+    }
+  }
+
+  .MuiInputLabel-root {
+    .App-dark & {
+      color: #E3E3E3 !important;
+    }
+  }
+
+  .MuiSelect-icon {
+    .App-dark & {
+      color: #cecece !important;
+    }
+  }
+
+  /* Estilo para remover a borda do TextField outlined quando não estiver focado */
+  & .MuiOutlinedInput-root:not(.Mui-focused) .MuiOutlinedInput-notchedOutline {
+
+    .App-dark & {
+      border: 1px solid #6d6d6d !important;
+    }
+  }
+
+  /* Estilo para adicionar a borda ao passar o mouse */
+  & .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    .App-dark & {
+      border: 1px solid #3f51b5 !important;
+    }
+
+    /* ou outra cor de borda desejada */
+  }
+
+  /* Estilo para adicionar a borda quando estiver focado */
+  & .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    .App-dark & {
+      border: 2px solid #3f51b5 !important;
+    }
+
+    /* Cor azul padrão do Material-UI para borda em foco */
+  }
+
+
+  &__subtitulo {
+    font-size: 14px !important;
+    line-height: 20px;
+    color: #475467 !important;
+    padding: 0 !important;
+
+    .App-dark & {
+      color: #CCC !important;
+    }
+  }
+
+  &__box-icone-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+
+    .App-dark & {
+      color: #E3E3E3;
+    }
+
+    & .icon-copy {
+      font-size: 18px;
+      display: flex;
+      width: 48px;
+      height: 48px;
+      padding: 12px;
+      justify-content: center;
+      align-items: center;
+      border-radius: 28px;
+      border: 8px solid #F9FAFB;
+      background: #F2F4F7;
+
+      .App-dark & {
+        background-color: #171717;
+        border: 8px solid #171717;
+        color: #88A6FF;
+      }
+    }
+  }
+
+  &__texto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 4px;
+  }
+
+  &__box {
+    padding: 0 !important;
+
+    &--text {
+      font-size: 14px !important;
+      line-height: 20px;
+      color: #ececec !important;
+      padding: 0 !important;
+    }
+  }
+
+  &__botao {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+    display: flex;
+
+    &--cancelar {
+      border-color: #a7a7a7 !important;
+      color: #344054 !important;
+
+      .App-dark & {
+        color: #cecece !important;
+        border-color: #cecece !important;
+        text-transform: unset !important;
+      }
+    }
+
+    &--confirmar{
+      .App-dark & {
+        text-transform: unset !important;
+      }
+    }
+  }
+}

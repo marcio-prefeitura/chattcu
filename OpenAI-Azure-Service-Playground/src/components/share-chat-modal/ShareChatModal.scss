@@ -1,0 +1,342 @@
+@import '../sass/mixins.scss';
+
+.share-chat-modal {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FFF;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0);
+    border-radius: 12px;
+    max-width: 800px;
+    gap: 16px;
+    overflow-y: overlay;
+    width: 562px;
+    max-height: 100vh;
+
+    @media screen and (max-width:465px) {
+        max-width: 100vw;
+    }
+
+    .compartilhar-com-box> :nth-child(2) {
+        border-radius: 14px !important;
+        width: 98%;
+        margin-bottom: 4px;
+        min-height: 44px;
+    }
+
+    .css-i4bv87-MuiSvgIcon-root,
+    .css-jw2yrh .MuiChip-deleteIcon,
+    .css-vubbuv-MuiSvgIcon-root,
+    .css-wjsjww-MuiChip-label,
+    .css-1k33q06,
+    .css-vubbuv,
+    .css-1pjtbja-MuiChip-label,
+    .css-ptiqhd-MuiSvgIcon-root {
+        z-index: 999 !important;
+
+        .App-dark & {
+            color: #E0E0E0 !important;
+        }
+    }
+
+    .css-zinhc8-MuiButtonBase-root-MuiChip-root,
+    .css-chq866 .MuiAutocomplete-tag {
+        z-index: 9999999;
+
+        .App-dark & {
+            background-color: #202327 !important;
+            color: #88A6FF !important;
+        }
+    }
+
+    .App-dark & {
+        background-color: #202124 !important;
+    }
+
+    &__titulo {
+        font-weight: 600 !important;
+        font-size: 18px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+
+        @media screen and (max-width:500px) {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .App-dark & {
+            color: #E0E0E0;
+        }
+    }
+
+    &__subtitulo {
+        font-size: 12px !important;
+        line-height: 20px;
+        color: #7E848C !important;
+        padding: 0 !important;
+        text-decoration: underline;
+
+        .App-dark & {
+            color: #ececec !important;
+        }
+    }
+
+    &__icone-close {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        width: 100%;
+        gap: 12px;
+        align-items: center;
+
+        & .icon-x{
+            .App-dark & {
+              color: #E3E3E3 !important;
+            }
+          }
+
+    }
+
+    & .icon-share {
+        font-size: 18px;
+        display: flex;
+        width: 48px;
+        height: 48px;
+        padding: 12px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 28px;
+        border: 8px solid #F9FAFB;
+        background: #F2F4F7;
+
+        .App-dark & {
+            background-color: #171717;
+            border: 8px solid #171717;
+            color: #88A6FF;
+        }
+    }
+
+    &__texto {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        gap: 4px;
+
+        &__nenhum-arquivo {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+            color: #595959;
+            font-size: 13px;
+            font-weight: 500;
+            background: #F1F5FA;
+            border-radius: 8px;
+            padding: 8px 18px;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+
+            .App-dark & {
+                background-color: #171717 !important;
+            }
+
+            &>p {
+                width: 57%;
+                word-break: break-all;
+            }
+        }
+
+        .App-dark & {
+            color: #E0E0E0 !important;
+        }
+    }
+
+    &__box {
+        padding: 0 !important;
+
+        &--text {
+            font-size: 14px !important;
+            line-height: 20px;
+            color: #475467;
+            padding: 0 !important;
+
+            .App-dark & {
+                color: #E0E0E0;
+            }
+        }
+    }
+
+    &__message-box-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        align-self: stretch;
+        max-height: 350px;
+        overflow-y: auto;
+
+        @include barra-de-rolagem;
+    }
+
+    .message {
+        &__box-img-message {
+            display: flex;
+            gap: 1rem;
+        }
+
+        &__box-paragrafo-copy-alert {
+            display: flex;
+            gap: 1rem;
+            flex-direction: row;
+        }
+
+        &__box-paragrafo {
+            //display: inline-block;
+
+            .App-dark & {
+                color: #E0E0E0 !important;
+            }
+        }
+
+        &__box-avatar-text-chattcu {
+            max-width: 700px;
+
+            @media screen and (max-width:465px) {
+                max-width: 72vw;
+            }
+        }
+
+        // &__historico {
+        //     //margin-left: 50px;
+        // }
+
+        &__box-paragrafo-robo {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            gap: 1rem;
+            padding: 14px 20px;
+
+            .App-dark & {
+                color: #E0E0E0;
+            }
+        }
+
+        &__text {
+            color: #767676;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 160%;
+
+            .App-dark & {
+                color: #E0E0E0 !important;
+            }
+        }
+    }
+
+    & .MuiAvatar-root {
+        color: #2D2D2E !important;
+        font-weight: 700;
+        font-size: 12px !important;
+        width: 30px;
+        height: 30px;
+        padding: 0 !important;
+
+        .App-dark & {
+            color: #cecece !important;
+        }
+    }
+
+    .css-19qh8xo-MuiInputBase-input-MuiOutlinedInput-input,
+    .css-b52kj1,
+    .css-chq866-MuiInputBase-input-MuiOutlinedInput-input {
+        z-index: 999999;
+
+        .App-dark & {
+            color: #ececec !important;
+        }
+    }
+
+    .css-9e5uuu-MuiPaper-root-MuiAutocomplete-paper,
+    .css-t4hinj-MuiPaper-root-MuiAutocomplete-paper,
+    .css-1rndd9j-MuiPopper-root-MuiAutocomplete-popper,
+    .css-ojwayj-MuiPopper-root-MuiAutocomplete-popper,
+    .css-t4hinj {
+        .App-dark & {
+            color: #ececec !important;
+            background-color: #212428 !important;
+        }
+    }
+
+    .css-6wwd73-MuiAutocomplete-noOptions,
+    .css-t0bixx-MuiAutocomplete-noOptions,
+    .css-12yjm75-MuiInputBase-input-MuiOutlinedInput-input:focus,
+    .css-t0bixx,
+    .css-1y3zh1:focus {
+        .App-dark & {
+            color: #ececec;
+        }
+    }
+
+    & .MuiOutlinedInput-notchedOutline {
+        .App-dark & {
+            background-color: #17171775 !important;
+            border: 1px solid #E0E0E0;
+        }
+    }
+
+    & .css-e9wurd.Mui-focused .MuiOutlinedInput-notchedOutline {
+        border-color: rgb(136, 166, 255);
+        border-width: 2px;
+    }
+
+    & .MuiInputLabel-root {
+        .App-dark & {
+            color: #E0E0E0 !important;
+        }
+    }
+
+    &__botao {
+        //margin-top: 15px;
+        justify-content: flex-end;
+        gap: 8px;
+        display: flex;
+
+        &--confirmar.disabled {
+            .App-dark & {
+                background-color: #2E3237 !important;
+                color: #ffffff4d;
+            }
+        }
+
+        &--cancelar {
+            border-color: #a7a7a7 !important;
+            color: #344054 !important;
+
+            .App-dark & {
+                color: #cecece !important;
+                border-color: #cecece !important;
+            }
+        }
+    }
+
+    /* Novos estilos */
+    .share-chat-modal__botao--confirmar {
+        transition: all 0.3s ease;
+        white-space: nowrap !important;
+    }
+
+    .mensagem-temporaria {
+        margin-top: 10px;
+        transition: opacity 0.3s ease;
+        opacity: 1;
+    }
+}

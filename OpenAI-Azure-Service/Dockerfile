@@ -15,8 +15,6 @@ FROM python:3.12.5-slim-bullseye AS app
 EXPOSE 8000
 WORKDIR /app
 
-COPY ./resources /resources
-
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         openjdk-17-jdk \

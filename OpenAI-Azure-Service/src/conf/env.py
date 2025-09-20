@@ -19,6 +19,35 @@ _logger = logging.getLogger(__name__)
 
 _PROFILE = os.environ["PROFILE"]
 
+
+def _ensure_entraid_app_registrations_env() -> None:
+    raw_value = os.getenv("ENTRAID_APP_REGISTRATIONS")
+    if raw_value:
+        try:
+            json.loads(raw_value)
+            return
+        except json.JSONDecodeError:
+            pass
+
+    indexed_values: list[str] = []
+    index = 0
+    while True:
+        env_key = f"ENTRAID_APP_REGISTRATIONS__{index}"
+        value = os.getenv(env_key)
+        if value is None:
+            break
+        indexed_values.append(value)
+        index += 1
+
+    if not indexed_values and raw_value:
+        indexed_values = [item.strip() for item in raw_value.split(',') if item.strip()]
+
+    if indexed_values:
+        os.environ["ENTRAID_APP_REGISTRATIONS"] = json.dumps(indexed_values)
+
+
+_ensure_entraid_app_registrations_env()
+
 os.environ["BASE_DOMAIN"] = (
     "producao.rancher.tcu.gov.br"
     if _PROFILE in ["prod", "homol"]

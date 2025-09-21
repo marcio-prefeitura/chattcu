@@ -26,6 +26,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # atualiza o PATH (mantém binários do pip local); LibreOffice já fica no PATH padrão (/usr/bin/soffice)
+ENV PORT=8000
 ENV PATH=/root/.local/bin:$PATH
 
 COPY --from=builder /root/.local /root/.local
@@ -33,5 +34,4 @@ COPY newrelic.ini .
 COPY ./src/ ./src
 
 # ENTRYPOINT ["newrelic-admin", "run-program"]
-ENTRYPOINT uvicorn src.main:app --host 0.0.0.0
-# CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0"]
+ENTRYPOINT ["/bin/sh", "-c", "uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

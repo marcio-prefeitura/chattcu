@@ -1,0 +1,46 @@
+name: Auto Commit & Push
+
+on:
+  workflow_dispatch: {}     # permite rodar manualmente
+  push:
+    branches: [ main ]      # também roda quando houver push na main
+    paths:
+      - 'OpenAI-Azure-Service/**'
+      - '.github/workflows/auto-push.yml'
+
+permissions:
+  contents: write           # <-- dá permissão de escrever no repo
+
+jobs:
+  autopush:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Exemplo de alteração automática (troque por sua automação real)
+      - name: Exemplo de mudança automatizada
+        run: |
+          date > AUTO_TIMESTAMP.txt
+
+      - name: Configurar identidade do bot
+        run: |
+          git config user.name  "chattcu-bot"
+          git config user.email "chattcu-bot@users.noreply.github.com"
+
+      - name: Commit se houver mudanças
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "chore(bot): atualização automática"
+          else
+            echo "Sem mudanças para commitar."
+          fi
+
+      - name: Push com rebase
+        run: |
+          BRANCH="${GITHUB_REF##*/}"
+          git pull --rebase origin "$BRANCH" || true
+          git push origin "$BRANCH" || true
